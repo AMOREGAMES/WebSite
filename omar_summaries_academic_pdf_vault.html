@@ -1,0 +1,3147 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Omar Summaries | Academic PDF Vault & AI Study Buddy</title>
+
+  <!-- Google Fonts: Inter & Cairo -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            matte: '#0A0A0A',
+            charcoal: '#141414',
+            obsidian: '#1C1C1C',
+            ivory: '#FAF8F5',
+            cream: '#FFFFFF',
+            ink: '#18181B',
+            gold: {
+              DEFAULT: '#D4AF37',
+              light: '#F3E5AB',
+              dark: '#AA8A26',
+              antique: '#B8860B',
+              glow: 'rgba(212, 175, 55, 0.25)'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'Cairo', 'sans-serif'],
+            arabic: ['Cairo', 'Inter', 'sans-serif']
+          },
+          animation: {
+            'fade-in-up': 'fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+            'modal-pop': 'modalPop 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards'
+          },
+          keyframes: {
+            fadeInUp: {
+              '0%': { opacity: '0', transform: 'translateY(16px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' }
+            },
+            modalPop: {
+              '0%': { opacity: '0', transform: 'scale(0.96) translateY(10px)' },
+              '100%': { opacity: '1', transform: 'scale(1) translateY(0)' }
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- jsPDF for Rich Multi-Page Explanation & Practice Exam PDF Generation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <!-- PDF.js for Full-Screen High-DPI Multi-Page Canvas Rendering -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+  <style>
+    :root {
+      --bg-page: #FAF8F5;
+      --bg-surface: #FFFFFF;
+      --bg-elevated: #F3EFE6;
+      --text-main: #18181B;
+      --text-muted: #52525B;
+      --gold-accent: #B8860B;
+      --gold-soft: #D4AF37;
+      --border-gold: rgba(184, 134, 11, 0.28);
+      --folder-grad-start: #FFFFFF;
+      --folder-grad-end: #F7F3EA;
+      --tab-grad-start: #EFE8D8;
+      --tab-grad-end: #E6DEC8;
+    }
+
+    html.dark {
+      --bg-page: #0A0A0A;
+      --bg-surface: #141414;
+      --bg-elevated: #1C1C1C;
+      --text-main: #F5F5F5;
+      --text-muted: #A3A3A3;
+      --gold-accent: #D4AF37;
+      --gold-soft: #F3E5AB;
+      --border-gold: rgba(212, 175, 55, 0.26);
+      --folder-grad-start: #181818;
+      --folder-grad-end: #111111;
+      --tab-grad-start: #241F12;
+      --tab-grad-end: #19160E;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      font-family: 'Inter', 'Cairo', sans-serif;
+      overflow-x: hidden;
+      min-height: 100vh;
+      transition: background-color 0.35s ease, color 0.35s ease;
+    }
+
+    html.dark body {
+      background-image:
+        radial-gradient(circle at 15% 0%, rgba(212, 175, 55, 0.09) 0%, transparent 45%),
+        radial-gradient(circle at 85% 20%, rgba(243, 229, 171, 0.05) 0%, transparent 40%);
+    }
+
+    html:not(.dark) body {
+      background-image:
+        radial-gradient(circle at 15% 0%, rgba(184, 134, 11, 0.08) 0%, transparent 45%),
+        radial-gradient(circle at 85% 20%, rgba(212, 175, 55, 0.07) 0%, transparent 40%);
+    }
+
+    html[dir="rtl"] body {
+      font-family: 'Cairo', 'Inter', sans-serif;
+    }
+
+    /* Luxury Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg-page);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(184, 134, 11, 0.45);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #D4AF37;
+    }
+
+    /* Digital Folder Card Aesthetic */
+    .folder-card {
+      position: relative;
+      background: linear-gradient(165deg, var(--folder-grad-start) 0%, var(--folder-grad-end) 100%);
+      border: 1px solid var(--border-gold);
+      border-radius: 0.25rem 1rem 1rem 1rem;
+      transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1),
+                  box-shadow 0.32s cubic-bezier(0.16, 1, 0.3, 1),
+                  border-color 0.32s ease,
+                  background 0.32s ease;
+    }
+
+    html[dir="rtl"] .folder-card {
+      border-radius: 1rem 0.25rem 1rem 1rem;
+    }
+
+    .folder-tab {
+      position: absolute;
+      top: -13px;
+      left: -1px;
+      height: 14px;
+      width: 112px;
+      background: linear-gradient(90deg, var(--tab-grad-start) 0%, var(--tab-grad-end) 100%);
+      border-top: 1px solid var(--border-gold);
+      border-left: 1px solid var(--border-gold);
+      border-right: 1px solid var(--border-gold);
+      border-radius: 0.6rem 0.6rem 0 0;
+      transition: background 0.32s ease, border-color 0.32s ease;
+    }
+
+    html[dir="rtl"] .folder-tab {
+      left: auto;
+      right: -1px;
+    }
+
+    html.dark .folder-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(212, 175, 55, 0.8);
+      box-shadow: 0 0 28px rgba(212, 175, 55, 0.24), 0 14px 30px rgba(0, 0, 0, 0.65);
+    }
+
+    html:not(.dark) .folder-card:hover {
+      transform: translateY(-6px);
+      border-color: #B8860B;
+      box-shadow: 0 12px 30px rgba(184, 134, 11, 0.16), 0 4px 12px rgba(24, 24, 27, 0.06);
+    }
+
+    .folder-card:hover .folder-tab {
+      background: linear-gradient(90deg, #D4AF37 0%, #B8860B 100%);
+      border-color: #D4AF37;
+    }
+
+    html.dark .gold-gradient-text {
+      background: linear-gradient(135deg, #F3E5AB 0%, #D4AF37 52%, #AA8A26 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    html:not(.dark) .gold-gradient-text {
+      background: linear-gradient(135deg, #B8860B 0%, #9A6B06 55%, #D4AF37 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .gold-btn {
+      background: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%);
+      color: #0A0A0A;
+      font-weight: 700;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 14px rgba(212, 175, 55, 0.24);
+    }
+    .gold-btn:hover {
+      background: linear-gradient(135deg, #F3E5AB 0%, #D4AF37 100%);
+      box-shadow: 0 0 20px rgba(212, 175, 55, 0.45);
+      transform: translateY(-1px);
+    }
+    .gold-btn:active {
+      transform: translateY(0);
+    }
+
+    /* PDF Canvas Page Wrapper */
+    .pdf-page-sheet {
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(212, 175, 55, 0.25);
+      background: #ffffff;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    /* Loading Spinner Ring */
+    .gold-spinner {
+      width: 44px;
+      height: 44px;
+      border: 3px solid rgba(212, 175, 55, 0.2);
+      border-top-color: #D4AF37;
+      border-radius: 50%;
+      animation: spin 0.85s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Chat Typing Dots */
+    .typing-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: #D4AF37;
+      animation: bounceDot 1.2s infinite ease-in-out;
+    }
+    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounceDot {
+      0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+      40% { transform: scale(1.15); opacity: 1; }
+    }
+  </style>
+</head>
+<body class="antialiased selection:bg-gold selection:text-matte">
+
+  <!-- Initial Sleek Loading Overlay -->
+  <div id="bootLoader" class="fixed inset-0 z-[100] bg-ivory dark:bg-matte flex flex-col items-center justify-center transition-opacity duration-500">
+    <div class="relative flex items-center justify-center mb-5">
+      <div class="gold-spinner w-16 h-16"></div>
+      <i data-lucide="book-open-check" class="w-6 h-6 text-gold-antique dark:text-gold absolute"></i>
+    </div>
+    <h2 class="text-xl font-bold tracking-wider gold-gradient-text">OMAR SUMMARIES</h2>
+    <p class="text-xs text-zinc-500 dark:text-neutral-400 mt-2 tracking-widest uppercase">Preparing Academic Vault...</p>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="fixed top-20 right-5 z-[95] flex flex-col gap-2.5 max-w-sm w-full pointer-events-none px-4 sm:px-0"></div>
+
+  <!-- ==================== HEADER / NAVBAR ==================== -->
+  <header class="sticky top-0 z-40 backdrop-blur-xl bg-ivory/90 dark:bg-matte/85 border-b border-gold-antique/25 dark:border-gold/20 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between gap-2 sm:gap-3">
+      <!-- Brand Emblem & Title -->
+      <a href="#top" class="flex items-center gap-2.5 sm:gap-3 group focus:outline-none shrink-0">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-gold/25 to-gold/5 border border-gold-antique/50 dark:border-gold/50 flex items-center justify-center shadow-[0_0_15px_rgba(212,175,55,0.18)] group-hover:border-gold transition-all">
+          <svg class="w-5 h-5 text-gold-antique dark:text-gold" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20" />
+            <path d="M9 7h6" />
+            <path d="M9 11h4" />
+          </svg>
+        </div>
+        <div>
+          <span class="block text-base sm:text-xl font-extrabold tracking-tight gold-gradient-text leading-none">
+            Omar Summaries
+          </span>
+          <span data-i18n="brandTagline" class="block text-[10px] sm:text-[11px] text-zinc-500 dark:text-neutral-400 tracking-wider mt-1">
+            ACADEMIC PDF ARCHIVE
+          </span>
+        </div>
+      </a>
+
+      <!-- Right Controls: AI Chat, Theme Toggle, Language Toggle & Manage Content -->
+      <div class="flex items-center gap-1.5 sm:gap-2.5 flex-wrap justify-end">
+        <!-- Quick Open AI Study Buddy -->
+        <button
+          id="headerAiBtn"
+          type="button"
+          class="px-3 py-2 rounded-xl bg-gold/15 hover:bg-gold/25 border border-gold-antique/45 dark:border-gold/45 text-xs sm:text-sm font-bold text-gold-antique dark:text-gold-light flex items-center gap-1.5 transition-all cursor-pointer"
+          title="Open Egyptian AI Study Assistant"
+        >
+          <i data-lucide="sparkles" class="w-4 h-4 text-gold-antique dark:text-gold"></i>
+          <span data-i18n="headerAiLabel" class="hidden md:inline">مساعد عمر الذكي</span>
+        </button>
+
+        <!-- Theme Switcher (Light / Dark) -->
+        <button
+          id="themeToggleBtn"
+          type="button"
+          class="px-3 py-2 rounded-xl bg-white dark:bg-charcoal hover:bg-zinc-100 dark:hover:bg-obsidian border border-gold-antique/35 dark:border-gold/30 hover:border-gold text-xs sm:text-sm font-semibold text-ink dark:text-gold-light flex items-center gap-1.5 transition-all cursor-pointer"
+          title="Switch Light / Dark Mode"
+        >
+          <i id="themeIcon" data-lucide="sun" class="w-4 h-4 text-gold-antique dark:text-gold"></i>
+          <span id="themeToggleLabel" class="hidden sm:inline">Light</span>
+        </button>
+
+        <!-- Language / Direction Toggle -->
+        <button
+          id="langToggleBtn"
+          type="button"
+          class="px-3 py-2 rounded-xl bg-white dark:bg-charcoal hover:bg-zinc-100 dark:hover:bg-obsidian border border-gold-antique/35 dark:border-gold/30 hover:border-gold text-xs sm:text-sm font-semibold text-gold-antique dark:text-gold-light flex items-center gap-1.5 transition-all cursor-pointer"
+          title="Switch Language / Direction"
+        >
+          <i data-lucide="languages" class="w-4 h-4 text-gold-antique dark:text-gold"></i>
+          <span id="langToggleLabel">عربي</span>
+        </button>
+
+        <!-- Admin / Manage Content Button -->
+        <button
+          id="manageContentBtn"
+          type="button"
+          class="px-3 sm:px-4 py-2 rounded-xl bg-white dark:bg-charcoal hover:bg-zinc-100 dark:hover:bg-obsidian border border-gold-antique/45 dark:border-gold/40 hover:border-gold text-xs sm:text-sm font-semibold text-gold-antique dark:text-gold flex items-center gap-1.5 shadow-[0_0_15px_rgba(212,175,55,0.12)] transition-all cursor-pointer"
+        >
+          <i id="adminLockIcon" data-lucide="lock" class="w-4 h-4 text-gold-antique dark:text-gold"></i>
+          <span data-i18n="manageContent">Manage Content</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== HERO & SEARCH SECTION ==================== -->
+  <main id="top" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-9 pb-24">
+    <section class="text-center max-w-3xl mx-auto mb-10 animate-fade-in-up">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white dark:bg-charcoal border border-gold-antique/35 dark:border-gold/30 text-gold-antique dark:text-gold-light text-xs font-semibold mb-5 shadow-sm">
+        <span class="w-2 h-2 rounded-full bg-gold animate-pulse"></span>
+        <span data-i18n="heroBadge">Curated University Lecture Notes & Practice Exams</span>
+      </div>
+
+      <h1 data-i18n="heroTitle" class="text-3xl sm:text-5xl font-extrabold tracking-tight text-ink dark:text-white leading-tight mb-4">
+        Master Your Courses with <span class="gold-gradient-text">Precision Summaries</span>
+      </h1>
+
+      <p data-i18n="heroSubtitle" class="text-zinc-600 dark:text-neutral-400 text-sm sm:text-base leading-relaxed mb-8 max-w-2xl mx-auto">
+        Every course folder includes structured lecture explanations and exam practice PDFs in crisp high definition—plus an Egyptian AI study buddy ready to answer any question.
+      </p>
+
+      <!-- Real-Time Search Bar -->
+      <div class="relative max-w-2xl mx-auto group">
+        <div class="absolute -inset-0.5 bg-gradient-to-r from-gold/40 via-gold-light/30 to-gold/40 rounded-2xl blur opacity-25 group-focus-within:opacity-70 transition duration-300"></div>
+        <div class="relative flex items-center bg-white dark:bg-charcoal border border-gold-antique/40 dark:border-gold/35 focus-within:border-gold rounded-2xl px-4 py-3.5 shadow-lg dark:shadow-2xl">
+          <i data-lucide="search" class="w-5 h-5 text-gold-antique dark:text-gold shrink-0"></i>
+          <input
+            id="searchInput"
+            type="text"
+            autocomplete="off"
+            data-i18n-placeholder="searchPlaceholder"
+            placeholder="Search by course title, code (e.g. ENG-301), category, or description..."
+            class="w-full bg-transparent border-none focus:outline-none text-sm sm:text-base text-ink dark:text-white placeholder-zinc-400 dark:placeholder-neutral-500 px-3"
+          />
+          <button
+            id="clearSearchBtn"
+            type="button"
+            class="hidden text-zinc-400 dark:text-neutral-400 hover:text-gold p-1 rounded-lg transition-colors cursor-pointer"
+            aria-label="Clear search"
+          >
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Dynamic Category Filter Pills & Stats Bar -->
+    <section class="mb-9 flex flex-col md:flex-row items-center justify-between gap-4 border-b border-zinc-200 dark:border-neutral-800/90 pb-5">
+      <div id="categoryPills" class="flex flex-wrap items-center justify-center md:justify-start gap-2">
+        <!-- Populated dynamically from unique categories in state.subjects -->
+      </div>
+
+      <div class="text-xs sm:text-sm text-zinc-500 dark:text-neutral-400 flex items-center gap-2 shrink-0">
+        <i data-lucide="folder-archive" class="w-4 h-4 text-gold-antique dark:text-gold"></i>
+        <span id="resultsCountText">Showing 6 courses</span>
+      </div>
+    </section>
+
+    <!-- Admin Quick Banner (Shown when Admin is unlocked) -->
+    <div id="adminActiveBanner" class="hidden mb-8 p-4 rounded-2xl bg-gradient-to-r from-gold/15 via-white dark:via-charcoal to-gold/10 border border-gold-antique/50 dark:border-gold/50 flex flex-col sm:flex-row items-center justify-between gap-4 animate-fade-in-up shadow-md">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gold/20 border border-gold flex items-center justify-center shrink-0">
+          <i data-lucide="shield-check" class="w-5 h-5 text-gold-antique dark:text-gold"></i>
+        </div>
+        <div>
+          <h3 data-i18n="adminBannerTitle" class="text-sm font-bold text-gold-antique dark:text-gold-light">Admin Studio Active</h3>
+          <p data-i18n="adminBannerDesc" class="text-xs text-zinc-600 dark:text-neutral-300">Add subjects with custom categories, edit details, or hot-swap Explanation & Quiz PDFs anytime.</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2.5 w-full sm:w-auto justify-end">
+        <button
+          id="openAddSubjectBtn"
+          type="button"
+          class="gold-btn px-4 py-2 rounded-xl text-xs sm:text-sm flex items-center gap-1.5 cursor-pointer"
+        >
+          <i data-lucide="folder-plus" class="w-4 h-4"></i>
+          <span data-i18n="addSubjectBtn">Add New Subject</span>
+        </button>
+        <button
+          id="openAdminDrawerBtn"
+          type="button"
+          class="px-3.5 py-2 rounded-xl bg-zinc-100 dark:bg-obsidian hover:bg-zinc-200 dark:hover:bg-neutral-800 border border-gold-antique/40 dark:border-gold/40 text-xs sm:text-sm text-gold-antique dark:text-gold-light font-semibold flex items-center gap-1.5 cursor-pointer"
+        >
+          <i data-lucide="sliders-horizontal" class="w-4 h-4 text-gold-antique dark:text-gold"></i>
+          <span data-i18n="adminPanelBtn">Studio Panel</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ==================== DUAL-PDF SUBJECTS FOLDER GRID ==================== -->
+    <section id="subjectsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7 pt-3">
+      <!-- Digital Folder Cards injected dynamically -->
+    </section>
+
+    <!-- Empty Search State -->
+    <div id="emptyState" class="hidden text-center py-20 px-4 rounded-3xl bg-white/80 dark:bg-charcoal/50 border border-zinc-200 dark:border-neutral-800">
+      <div class="w-16 h-16 rounded-2xl bg-zinc-100 dark:bg-obsidian border border-gold-antique/35 dark:border-gold/30 flex items-center justify-center mx-auto mb-4">
+        <i data-lucide="folder-search" class="w-8 h-8 text-gold-antique dark:text-gold"></i>
+      </div>
+      <h3 data-i18n="noResultsTitle" class="text-lg font-bold text-ink dark:text-white mb-1">No Matching Summaries Found</h3>
+      <p data-i18n="noResultsDesc" class="text-sm text-zinc-500 dark:text-neutral-400 max-w-md mx-auto mb-5">
+        Try adjusting your search keywords or selecting a different academic category filter.
+      </p>
+      <button
+        id="resetFiltersBtn"
+        type="button"
+        class="px-5 py-2.5 rounded-xl bg-zinc-100 dark:bg-obsidian hover:bg-zinc-200 dark:hover:bg-neutral-800 border border-gold-antique/40 dark:border-gold/40 text-gold-antique dark:text-gold text-sm font-semibold transition-all cursor-pointer"
+      >
+        <span data-i18n="resetFilters">Reset Search & Filters</span>
+      </button>
+    </div>
+  </main>
+
+  <!-- ==================== FOOTER (NO PHONE OR EMAIL) ==================== -->
+  <footer class="border-t border-zinc-200 dark:border-neutral-900 bg-white/70 dark:bg-charcoal/60 py-8 mt-auto transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-500 dark:text-neutral-500">
+      <div class="flex items-center gap-2">
+        <span class="font-bold text-gold-antique dark:text-gold">Omar Summaries</span>
+        <span>•</span>
+        <span data-i18n="footerRights">Academic Excellence & Structured Knowledge</span>
+      </div>
+      <div class="flex items-center gap-4">
+        <span class="inline-flex items-center gap-1.5 text-zinc-600 dark:text-neutral-400">
+          <i data-lucide="database" class="w-3.5 h-3.5 text-gold-antique dark:text-gold"></i>
+          <span data-i18n="offlineReady">Offline IndexedDB Dual-PDF Vault Active</span>
+        </span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==================== FLOATING EGYPTIAN AI STUDY BUDDY BUTTON ==================== -->
+  <button
+    id="floatingAiBtn"
+    type="button"
+    class="fixed bottom-5 right-5 z-40 gold-btn px-4 py-3.5 rounded-full flex items-center gap-2.5 shadow-[0_8px_30px_rgba(212,175,55,0.45)] cursor-pointer group"
+    aria-label="Open Egyptian AI Study Assistant"
+  >
+    <div class="w-7 h-7 rounded-full bg-matte/15 flex items-center justify-center">
+      <i data-lucide="bot" class="w-4 h-4 text-matte"></i>
+    </div>
+    <span data-i18n="floatingAiCta" class="text-xs sm:text-sm font-extrabold tracking-tight">اسأل الذكاء الاصطناعي</span>
+  </button>
+
+  <!-- ==================== EGYPTIAN AI STUDY BUDDY CHAT MODAL/DRAWER ==================== -->
+  <div
+    id="aiChatModal"
+    class="fixed inset-0 z-50 hidden items-end sm:items-center justify-center sm:justify-end bg-black/60 backdrop-blur-sm p-0 sm:p-5"
+    role="dialog"
+    aria-modal="true"
+  >
+    <div class="bg-ivory dark:bg-charcoal border-t sm:border border-gold-antique/45 dark:border-gold/45 rounded-t-3xl sm:rounded-3xl w-full sm:w-[440px] h-[86vh] sm:h-[640px] max-h-[92vh] flex flex-col shadow-[0_0_50px_rgba(212,175,55,0.28)] animate-modal-pop overflow-hidden">
+      <!-- Chat Header -->
+      <div class="px-5 py-4 bg-white dark:bg-obsidian border-b border-gold-antique/25 dark:border-gold/25 flex items-center justify-between shrink-0">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-gold to-gold-antique flex items-center justify-center text-matte shadow-md">
+            <i data-lucide="sparkles" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h3 class="text-sm sm:text-base font-extrabold text-ink dark:text-white">مساعد عمر الذكي</h3>
+              <span class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">مصري 100%</span>
+            </div>
+            <p class="text-[11px] text-zinc-500 dark:text-neutral-400">اسألني في أي مادة أو أي سؤال في بالك وهرد عليك بالمصري!</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-1.5">
+          <button
+            id="clearAiChatBtn"
+            type="button"
+            class="p-2 rounded-xl hover:bg-zinc-100 dark:hover:bg-neutral-800 text-zinc-500 dark:text-neutral-400 hover:text-gold transition-colors cursor-pointer"
+            title="مسح المحادثة / Clear Chat"
+          >
+            <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+          </button>
+          <button
+            id="closeAiChatBtn"
+            type="button"
+            class="p-2 rounded-xl hover:bg-zinc-100 dark:hover:bg-neutral-800 text-zinc-500 dark:text-neutral-400 hover:text-gold transition-colors cursor-pointer"
+            title="إغلاق"
+          >
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Messages Feed (Always RTL for natural Egyptian Arabic flow) -->
+      <div id="aiMessagesContainer" dir="rtl" class="flex-1 overflow-y-auto p-4 space-y-3.5 bg-ivory/60 dark:bg-matte/60">
+        <!-- Welcome message injected by JS -->
+      </div>
+
+      <!-- Quick Egyptian Prompt Suggestions -->
+      <div dir="rtl" class="px-4 py-2.5 bg-white/80 dark:bg-obsidian/80 border-t border-zinc-200 dark:border-neutral-800 flex items-center gap-2 overflow-x-auto shrink-0">
+        <button type="button" data-ai-prompt="اشرحلي ملخص مادة Modern British Literature بطريقة سهلة وبسيطة" class="ai-chip shrink-0 px-3 py-1.5 rounded-full bg-gold/15 hover:bg-gold/25 border border-gold-antique/35 dark:border-gold/35 text-[11px] font-bold text-gold-antique dark:text-gold-light cursor-pointer transition-colors">
+          📚 اشرحلي الأدب الحديث
+        </button>
+        <button type="button" data-ai-prompt="اعملي 3 أسئلة اختيار من متعدد في اللغويات واختبرني فيهم" class="ai-chip shrink-0 px-3 py-1.5 rounded-full bg-gold/15 hover:bg-gold/25 border border-gold-antique/35 dark:border-gold/35 text-[11px] font-bold text-gold-antique dark:text-gold-light cursor-pointer transition-colors">
+          ✍️ اختبرني في اللغويات
+        </button>
+        <button type="button" data-ai-prompt="اديني نصايح ألم بيها المنهج قبل الامتحان بسرعة" class="ai-chip shrink-0 px-3 py-1.5 rounded-full bg-gold/15 hover:bg-gold/25 border border-gold-antique/35 dark:border-gold/35 text-[11px] font-bold text-gold-antique dark:text-gold-light cursor-pointer transition-colors">
+          💡 إزاي ألم المنهج؟
+        </button>
+      </div>
+
+      <!-- Chat Input Form -->
+      <form id="aiChatForm" dir="rtl" class="p-3.5 bg-white dark:bg-obsidian border-t border-gold-antique/25 dark:border-gold/25 flex items-center gap-2 shrink-0">
+        <input
+          id="aiChatInput"
+          type="text"
+          autocomplete="off"
+          placeholder="اكتب سؤالك هنا يا بطل..."
+          class="flex-1 px-4 py-2.5 rounded-xl bg-ivory dark:bg-matte border border-zinc-300 dark:border-neutral-700 focus:border-gold focus:outline-none text-sm text-ink dark:text-white placeholder-zinc-400 dark:placeholder-neutral-500"
+          required
+        />
+        <button
+          id="aiSendBtn"
+          type="submit"
+          class="gold-btn p-3 rounded-xl flex items-center justify-center shrink-0 cursor-pointer disabled:opacity-50"
+          title="إرسال"
+        >
+          <i data-lucide="send" class="w-4 h-4 rtl:rotate-180"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== FULL-SCREEN PDF VIEWER MODAL (100vh / 100vw) ==================== -->
+  <div
+    id="pdfViewerModal"
+    class="fixed inset-0 z-50 hidden flex-col bg-matte w-screen h-screen overflow-hidden"
+    role="dialog"
+    aria-modal="true"
+  >
+    <!-- Top PDF Toolbar -->
+    <div class="bg-charcoal border-b border-gold/30 px-3 sm:px-5 py-2.5 flex flex-wrap items-center justify-between gap-2 shrink-0 shadow-xl z-10">
+      <!-- Left: Close & Subject Title -->
+      <div class="flex items-center gap-2.5 min-w-0 max-w-full lg:max-w-[34%]">
+        <button
+          id="closePdfViewerBtn"
+          type="button"
+          class="p-2 rounded-xl bg-obsidian hover:bg-neutral-800 border border-gold/30 text-gold-light hover:text-gold transition-colors shrink-0 cursor-pointer"
+          title="Close Viewer (Esc)"
+        >
+          <i data-lucide="arrow-left" class="w-5 h-5 rtl:rotate-180"></i>
+        </button>
+        <div class="min-w-0">
+          <div class="flex items-center gap-2">
+            <span id="viewerCourseCode" class="text-[11px] font-bold px-2 py-0.5 rounded bg-gold/15 text-gold border border-gold/30 shrink-0">
+              ENG-301
+            </span>
+            <h2 id="viewerTitle" class="text-sm sm:text-base font-bold text-white truncate">
+              Subject Title
+            </h2>
+          </div>
+          <p id="viewerMeta" class="text-[11px] text-neutral-400 truncate hidden sm:block">
+            High-Definition Full Document View
+          </p>
+        </div>
+      </div>
+
+      <!-- In-Viewer Mode Switcher: Let's Explain vs Test Yourself -->
+      <div class="flex items-center bg-obsidian border border-gold/30 rounded-xl p-1 gap-1">
+        <button
+          id="viewerSwitchExplainBtn"
+          type="button"
+          class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer"
+        >
+          <i data-lucide="book-open" class="w-3.5 h-3.5"></i>
+          <span data-i18n="explainBtnLabel">Let's Explain</span>
+        </button>
+        <button
+          id="viewerSwitchQuizBtn"
+          type="button"
+          class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer"
+        >
+          <i data-lucide="help-circle" class="w-3.5 h-3.5"></i>
+          <span data-i18n="quizBtnLabel">Test Yourself</span>
+        </button>
+      </div>
+
+      <!-- Center: Page Navigation & Zoom Controls -->
+      <div class="flex items-center gap-1.5 bg-obsidian/90 border border-neutral-800 px-2.5 py-1.5 rounded-xl">
+        <button id="prevPageBtn" type="button" class="p-1.5 rounded-lg hover:bg-neutral-800 text-neutral-300 hover:text-gold disabled:opacity-35 cursor-pointer" title="Previous Page">
+          <i data-lucide="chevron-up" class="w-4 h-4"></i>
+        </button>
+        <div class="flex items-center gap-1 text-xs font-medium text-neutral-200 px-1">
+          <input
+            id="pageNumberInput"
+            type="number"
+            min="1"
+            value="1"
+            class="w-11 text-center bg-charcoal border border-gold/30 rounded py-0.5 text-gold font-bold focus:outline-none focus:border-gold"
+          />
+          <span class="text-neutral-500">/</span>
+          <span id="totalPagesLabel" class="text-neutral-300">1</span>
+        </div>
+        <button id="nextPageBtn" type="button" class="p-1.5 rounded-lg hover:bg-neutral-800 text-neutral-300 hover:text-gold disabled:opacity-35 cursor-pointer" title="Next Page">
+          <i data-lucide="chevron-down" class="w-4 h-4"></i>
+        </button>
+
+        <div class="h-4 w-[1px] bg-neutral-700 mx-1"></div>
+
+        <button id="zoomOutBtn" type="button" class="p-1.5 rounded-lg hover:bg-neutral-800 text-neutral-300 hover:text-gold cursor-pointer" title="Zoom Out">
+          <i data-lucide="zoom-out" class="w-4 h-4"></i>
+        </button>
+        <button id="zoomResetBtn" type="button" class="px-2 py-0.5 rounded text-xs font-semibold text-gold-light hover:bg-neutral-800 min-w-[50px] text-center cursor-pointer" title="Fit Width">
+          100%
+        </button>
+        <button id="zoomInBtn" type="button" class="p-1.5 rounded-lg hover:bg-neutral-800 text-neutral-300 hover:text-gold cursor-pointer" title="Zoom In">
+          <i data-lucide="zoom-in" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- Right: Render Mode Toggle, Fullscreen & Download -->
+      <div class="flex items-center gap-2">
+        <button
+          id="toggleRenderModeBtn"
+          type="button"
+          class="hidden xl:flex items-center gap-1.5 px-3 py-2 rounded-xl bg-obsidian hover:bg-neutral-800 border border-neutral-700 text-xs font-medium text-neutral-300 hover:text-gold transition-colors cursor-pointer"
+          title="Switch between High-DPI Canvas Scroll and Native Browser PDF Frame"
+        >
+          <i data-lucide="layers" class="w-3.5 h-3.5 text-gold"></i>
+          <span id="renderModeLabel">HD Canvas</span>
+        </button>
+
+        <button
+          id="toggleFullscreenBtn"
+          type="button"
+          class="p-2 rounded-xl bg-obsidian hover:bg-neutral-800 border border-neutral-700 text-neutral-300 hover:text-gold transition-colors cursor-pointer"
+          title="Toggle Fullscreen"
+        >
+          <i data-lucide="maximize-2" class="w-4 h-4"></i>
+        </button>
+
+        <button
+          id="downloadPdfBtn"
+          type="button"
+          class="gold-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm flex items-center gap-1.5 cursor-pointer"
+        >
+          <i data-lucide="download" class="w-4 h-4"></i>
+          <span data-i18n="downloadPdf">Download PDF</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Scrollable PDF Canvas Container -->
+    <div id="pdfScrollContainer" class="flex-1 w-full overflow-y-auto overflow-x-auto bg-[#070707] relative flex flex-col items-center py-6 px-3 sm:px-6 gap-6">
+      <div id="pdfLoadingState" class="my-auto flex flex-col items-center justify-center py-12">
+        <div class="gold-spinner mb-4"></div>
+        <p data-i18n="renderingPdf" class="text-sm text-gold-light font-medium">Rendering all PDF pages in high definition...</p>
+      </div>
+
+      <div id="pdfPagesWrapper" class="flex flex-col items-center gap-6 w-full max-w-full"></div>
+
+      <iframe
+        id="nativePdfFrame"
+        title="Native PDF Document Frame"
+        class="hidden w-full h-full min-h-[82vh] rounded-xl border border-gold/30 bg-white"
+      ></iframe>
+    </div>
+  </div>
+
+  <!-- ==================== PIN / PASSWORD MODAL ==================== -->
+  <div id="pinModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-md p-4">
+    <div class="bg-white dark:bg-charcoal border border-gold-antique/45 dark:border-gold/40 rounded-2xl max-w-md w-full p-6 sm:p-7 shadow-[0_0_45px_rgba(212,175,55,0.22)] animate-modal-pop">
+      <div class="flex items-center justify-between mb-5">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-gold/15 border border-gold/40 flex items-center justify-center">
+            <i data-lucide="key-round" class="w-5 h-5 text-gold-antique dark:text-gold"></i>
+          </div>
+          <div>
+            <h3 data-i18n="pinModalTitle" class="text-lg font-bold text-ink dark:text-white">Admin Studio Access</h3>
+            <p data-i18n="pinModalSubtitle" class="text-xs text-zinc-500 dark:text-neutral-400">Enter security PIN to manage course PDFs</p>
+          </div>
+        </div>
+        <button id="closePinModalBtn" type="button" class="text-zinc-400 dark:text-neutral-400 hover:text-gold p-1.5 rounded-lg cursor-pointer">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="pinForm" class="space-y-4">
+        <div>
+          <label for="pinInput" data-i18n="enterPinLabel" class="block text-xs font-semibold uppercase tracking-wider text-gold-antique dark:text-gold-light mb-2">
+            Security PIN
+          </label>
+          <input
+            id="pinInput"
+            type="password"
+            maxlength="12"
+            placeholder="••••"
+            class="w-full px-4 py-3 rounded-xl bg-ivory dark:bg-matte border border-gold-antique/40 dark:border-gold/35 focus:border-gold focus:outline-none text-center text-xl tracking-[0.5em] text-gold-antique dark:text-gold font-bold"
+            required
+          />
+          <div class="flex items-center justify-between mt-2 text-xs">
+            <span class="text-zinc-500 dark:text-neutral-400">Default PIN: <strong class="text-gold-antique dark:text-gold">1234</strong></span>
+            <span id="pinErrorMsg" class="text-red-500 dark:text-red-400 hidden font-medium">Incorrect PIN. Try 1234.</span>
+          </div>
+        </div>
+
+        <button type="submit" class="w-full gold-btn py-3 rounded-xl text-sm flex items-center justify-center gap-2 cursor-pointer">
+          <i data-lucide="unlock" class="w-4 h-4"></i>
+          <span data-i18n="unlockBtn">Unlock Content Manager</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== EDIT SUBJECT DETAILS MODAL ==================== -->
+  <div id="editDetailsModal" class="fixed inset-0 z-[60] hidden items-center justify-center bg-black/80 backdrop-blur-md p-4">
+    <div class="bg-white dark:bg-charcoal border border-gold-antique/45 dark:border-gold/40 rounded-2xl max-w-lg w-full p-6 shadow-2xl animate-modal-pop">
+      <div class="flex items-center justify-between mb-4">
+        <h3 data-i18n="editSubjectModalTitle" class="text-base sm:text-lg font-bold text-ink dark:text-white flex items-center gap-2">
+          <i data-lucide="edit-3" class="w-4 h-4 text-gold-antique dark:text-gold"></i>
+          <span>Edit Subject Details & Category</span>
+        </h3>
+        <button id="closeEditModalBtn" type="button" class="text-zinc-400 hover:text-gold p-1 rounded-lg cursor-pointer">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="editSubjectForm" class="space-y-4">
+        <input type="hidden" id="editSubjectId" />
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <div>
+            <label data-i18n="courseCodeLabel" class="block text-xs text-zinc-500 dark:text-neutral-400 mb-1">Course Code *</label>
+            <input
+              id="editCourseCode"
+              type="text"
+              required
+              class="w-full px-3.5 py-2.5 rounded-xl bg-ivory dark:bg-matte border border-zinc-300 dark:border-neutral-700 focus:border-gold focus:outline-none text-sm text-ink dark:text-white"
+            />
+          </div>
+          <div>
+            <label data-i18n="categoryLabel" class="block text-xs text-zinc-500 dark:text-neutral-400 mb-1">Category (Type any) *</label>
+            <input
+              id="editCategory"
+              type="text"
+              list="categorySuggestions"
+              required
+              class="w-full px-3.5 py-2.5 rounded-xl bg-ivory dark:bg-matte border border-zinc-300 dark:border-neutral-700 focus:border-gold focus:outline-none text-sm text-ink dark:text-white"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label data-i18n="subjectTitleLabel" class="block text-xs text-zinc-500 dark:text-neutral-400 mb-1">Subject Title *</label>
+          <input
+            id="editSubjectTitle"
+            type="text"
+            required
+            class="w-full px-3.5 py-2.5 rounded-xl bg-ivory dark:bg-matte border border-zinc-300 dark:border-neutral-700 focus:border-gold focus:outline-none text-sm text-ink dark:text-white"
+          />
+        </div>
+
+        <div>
+          <label data-i18n="descriptionLabel" class="block text-xs text-zinc-500 dark:text-neutral-400 mb-1">Brief Description *</label>
+          <textarea
+            id="editDescription"
+            rows="3"
+            required
+            class="w-full px-3.5 py-2.5 rounded-xl bg-ivory dark:bg-matte border border-zinc-300 dark:border-neutral-700 focus:border-gold focus:outline-none text-sm text-ink dark:text-white"
+          ></textarea>
+        </div>
+
+        <div class="flex justify-end gap-2 pt-2">
+          <button type="button" id="cancelEditBtn" class="px-4 py-2 rounded-xl border border-zinc-300 dark:border-neutral-700 text-xs font-semibold text-zinc-600 dark:text-neutral-300 cursor-pointer">
+            Cancel
+          </button>
+          <button type="submit" class="gold-btn px-5 py-2 rounded-xl text-xs sm:text-sm cursor-pointer">
+            Save Changes
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Shared Datalist for Dynamic Category Suggestions -->
+  <datalist id="categorySuggestions"></datalist>
+
+  <!-- ==================== ADMIN STUDIO MANAGEMENT MODAL ==================== -->
+  <div id="adminStudioModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/85 backdrop-blur-md p-3 sm:p-6">
+    <div class="bg-ivory dark:bg-charcoal border border-gold-antique/45 dark:border-gold/40 rounded-2xl max-w-4xl w-full max-h-[92vh] flex flex-col shadow-[0_0_50px_rgba(212,175,55,0.25)] animate-modal-pop overflow-hidden">
+      <!-- Modal Header -->
+      <div class="px-6 py-4 bg-white dark:bg-obsidian border-b border-gold-antique/25 dark:border-gold/25 flex items-center justify-between shrink-0">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-gold/20 border border-gold flex items-center justify-center">
+            <i data-lucide="folder-cog" class="w-5 h-5 text-gold-antique dark:text-gold"></i>
+          </div>
+          <div>
+            <h3 data-i18n="studioTitle" class="text-base sm:text-lg font-bold text-ink dark:text-white">Omar Summaries — Content Studio</h3>
+            <p data-i18n="studioSubtitle" class="text-xs text-zinc-500 dark:text-neutral-400">Create custom categories, manage Explanation & Quiz PDFs, or update PIN</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button
+            id="lockAdminBtn"
+            type="button"
+            class="px-3 py-1.5 rounded-lg bg-ivory dark:bg-matte hover:bg-zinc-200 dark:hover:bg-neutral-900 border border-zinc-300 dark:border-neutral-700 text-xs text-zinc-700 dark:text-neutral-300 hover:text-red-500 flex items-center gap-1.5 cursor-pointer"
+          >
+            <i data-lucide="lock" class="w-3.5 h-3.5"></i>
+            <span data-i18n="lockBtn">Lock</span>
+          </button>
+          <button id="closeAdminStudioBtn" type="button" class="text-zinc-400 dark:text-neutral-400 hover:text-gold p-1.5 rounded-lg cursor-pointer">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Modal Body (Scrollable) -->
+      <div class="p-5 sm:p-6 overflow-y-auto space-y-7 flex-1">
+        <!-- Section 1: Security PIN Settings -->
+        <div class="bg-white dark:bg-matte/90 border border-gold-antique/25 dark:border-neutral-800 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h5 data-i18n="changePinTitle" class="text-xs font-bold text-ink dark:text-white uppercase tracking-wider">Update Admin Security PIN</h5>
+            <p data-i18n="changePinDesc" class="text-xs text-zinc-500 dark:text-neutral-400 mt-0.5">Change the password used to unlock Content Studio.</p>
+          </div>
+          <form id="changePinForm" class="flex items-center gap-2 w-full sm:w-auto">
+            <input
+              id="newPinValue"
+              type="text"
+              minlength="4"
+              maxlength="12"
+              required
+              placeholder="New PIN (min 4)"
+              class="px-3 py-2 rounded-xl bg-ivory dark:bg-charcoal border border-zinc-300 dark:border-neutral-700 focus:border-gold focus:outline-none text-xs text-ink dark:text-white w-full sm:w-36"
+            />
+            <button type="submit" class="px-4 py-2 rounded-xl bg-zinc-100 dark:bg-obsidian hover:bg-zinc-200 dark:hover:bg-neutral-800 border border-gold-antique/45 dark:border-gold/40 text-xs font-semibold text-gold-antique dark:text-gold shrink-0 cursor-pointer">
+              <span data-i18n="updatePinBtn">Update PIN</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- Section 2: Add New Subject Folder (Free-Text Category + Dual PDFs) -->
+        <div class="bg-white dark:bg-matte/90 border border-gold-antique/30 dark:border-gold/25 rounded-2xl p-5">
+          <h4 class="text-sm font-bold text-gold-antique dark:text-gold-light uppercase tracking-wider mb-4 flex items-center gap-2">
+            <i data-lucide="folder-plus" class="w-4 h-4 text-gold-antique dark:text-gold"></i>
+            <span data-i18n="addNewFolderHeader">Add New Subject Folder</span>
+          </h4>
+
+          <form id="addSubjectForm" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label data-i18n="courseCodeLabel" class="block text-xs text-zinc-500 dark:text-neutral-400 mb-1.5">Course Code *</label>
+              <input
+                id="newCourseCode"
+                type="text"
+                required
+                placeholder="e.g., ENG-410"
+                class="w-full px-3.5 py-2.5 rounded-xl bg-ivory dark:bg-charcoal border border-zinc-300 dark:border-neutral-700 focus:border-gold focus:outline-none text-sm text-ink dark:text-white"
+              />
+            </div>
+
+            <div>
+              <label data-i18n="categoryLabel" class="block text-xs text-zinc-500 dark:text-neutral-400 mb-1.5">Category (Write any category) *</label>
+              <input
+                id="newCategory"
+                type="text"
+                list="categorySuggestions"
+                required
+                placeholder="e.g., Literature, الترم الأول, Medicine..."
+                class="w-full px-3.5 py-2.5 rounded-xl bg-ivory dark:bg-charcoal border border-zinc-300 dark:border-neutral-700 focus:border-gold focus:outline-none text-sm text-ink dark:text-white"
+              />
+            </div>
+
+            <div class="sm:col-span-2">
+              <label data-i18n="subjectTitleLabel" class="block text-xs text-zinc-500 dark:text-neutral-400 mb-1.5">Subject Title *</label>
+              <input
+                id="newSubjectTitle"
+                type="text"
+                required
+                placeholder="e.g., Shakespearean Tragedy & Dramatic Structure"
+                class="w-full px-3.5 py-2.5 rounded-xl bg-ivory dark:bg-charcoal border border-zinc-300 dark:border-neutral-700 focus:border-gold focus:outline-none text-sm text-ink dark:text-white"
+              />
+            </div>
+
+            <div class="sm:col-span-2">
+              <label data-i18n="descriptionLabel" class="block text-xs text-zinc-500 dark:text-neutral-400 mb-1.5">Brief Description *</label>
+              <textarea
+                id="newDescription"
+                rows="2"
+                required
+                placeholder="Key themes, lecture synthesis, and exam preparation notes..."
+                class="w-full px-3.5 py-2.5 rounded-xl bg-ivory dark:bg-charcoal border border-zinc-300 dark:border-neutral-700 focus:border-gold focus:outline-none text-sm text-ink dark:text-white"
+              ></textarea>
+            </div>
+
+            <!-- Slot 1: Explanation PDF (Let's Explain / يلا بينا نشرح) -->
+            <div class="p-3.5 rounded-xl bg-ivory dark:bg-charcoal/80 border border-dashed border-gold-antique/45 dark:border-gold/35 space-y-2.5">
+              <label class="block text-xs font-bold text-gold-antique dark:text-gold-light flex items-center gap-1.5">
+                <i data-lucide="book-open" class="w-3.5 h-3.5 text-gold-antique dark:text-gold"></i>
+                <span data-i18n="uploadExplainLabel">1. Explanation PDF (يلا بينا نشرح) *</span>
+              </label>
+              <input
+                id="newExplainPdfFile"
+                type="file"
+                accept="application/pdf"
+                class="w-full text-xs text-zinc-600 dark:text-neutral-300 file:mr-2.5 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-gold file:text-matte hover:file:bg-gold-light cursor-pointer"
+              />
+              <input
+                id="newExplainPdfUrl"
+                type="url"
+                placeholder="Or direct Explanation PDF URL..."
+                class="w-full px-3 py-1.5 rounded-lg bg-white dark:bg-matte border border-zinc-300 dark:border-neutral-700 focus:border-gold focus:outline-none text-xs text-ink dark:text-white"
+              />
+            </div>
+
+            <!-- Slot 2: Questions / Practice PDF (Test Yourself / اختبر نفسك) -->
+            <div class="p-3.5 rounded-xl bg-ivory dark:bg-charcoal/80 border border-dashed border-gold-antique/45 dark:border-gold/35 space-y-2.5">
+              <label class="block text-xs font-bold text-gold-antique dark:text-gold-light flex items-center gap-1.5">
+                <i data-lucide="help-circle" class="w-3.5 h-3.5 text-gold-antique dark:text-gold"></i>
+                <span data-i18n="uploadQuizLabel">2. Questions PDF (اختبر نفسك) — Optional</span>
+              </label>
+              <input
+                id="newQuizPdfFile"
+                type="file"
+                accept="application/pdf"
+                class="w-full text-xs text-zinc-600 dark:text-neutral-300 file:mr-2.5 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-gold file:text-matte hover:file:bg-gold-light cursor-pointer"
+              />
+              <input
+                id="newQuizPdfUrl"
+                type="url"
+                placeholder="Or direct Questions PDF URL..."
+                class="w-full px-3 py-1.5 rounded-lg bg-white dark:bg-matte border border-zinc-300 dark:border-neutral-700 focus:border-gold focus:outline-none text-xs text-ink dark:text-white"
+              />
+            </div>
+
+            <div class="sm:col-span-2 flex justify-end">
+              <button type="submit" class="gold-btn px-5 py-2.5 rounded-xl text-sm flex items-center gap-2 cursor-pointer">
+                <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                <span data-i18n="createSubjectFolderBtn">Save Subject Folder</span>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Section 3: Manage & Replace Existing Subjects -->
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <h4 class="text-sm font-bold text-gold-antique dark:text-gold-light uppercase tracking-wider flex items-center gap-2">
+              <i data-lucide="files" class="w-4 h-4 text-gold-antique dark:text-gold"></i>
+              <span data-i18n="existingSubjectsHeader">Manage Existing Course Folders</span>
+            </h4>
+            <button
+              id="resetDefaultsBtn"
+              type="button"
+              class="text-xs text-zinc-500 dark:text-neutral-400 hover:text-gold underline cursor-pointer"
+            >
+              <span data-i18n="restoreDefaultsBtn">Restore Default 6 Courses</span>
+            </button>
+          </div>
+
+          <div id="adminSubjectList" class="space-y-3">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== APPLICATION JAVASCRIPT ==================== -->
+  <script>
+    (function () {
+      'use strict';
+
+      // Configure PDF.js Worker
+      if (window.pdfjsLib) {
+        window.pdfjsLib.GlobalWorkerOptions.workerSrc =
+          'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      }
+
+      // ==================== I18N TRANSLATIONS (EN / AR) ====================
+      const TRANSLATIONS = {
+        en: {
+          brandTagline: 'ACADEMIC PDF ARCHIVE',
+          headerAiLabel: "Omar's AI Buddy",
+          manageContent: 'Manage Content',
+          heroBadge: 'Curated University Lecture Notes & Practice Exams',
+          heroTitle: 'Master Your Courses with <span class="gold-gradient-text">Precision Summaries</span>',
+          heroSubtitle:
+            'Every course folder includes structured lecture explanations and exam practice PDFs in crisp high definition—plus an Egyptian AI study buddy ready to answer any question.',
+          searchPlaceholder: 'Search by course title, code (e.g. ENG-301), category, or description...',
+          catAll: 'All',
+          explainBtnLabel: "Let's Explain",
+          quizBtnLabel: 'Test Yourself',
+          replaceExplainBtn: 'Replace Explain PDF',
+          replaceQuizBtn: 'Replace Quiz PDF',
+          updatedLabel: 'Updated',
+          pagesLabel: 'Pages',
+          showingPrefix: 'Showing',
+          summariesWord: 'courses',
+          noResultsTitle: 'No Matching Summaries Found',
+          noResultsDesc: 'Try adjusting your search keywords or selecting a different academic category filter.',
+          resetFilters: 'Reset Search & Filters',
+          footerRights: 'Academic Excellence & Structured Knowledge',
+          offlineReady: 'Offline IndexedDB Dual-PDF Vault Active',
+          floatingAiCta: 'Ask AI Buddy',
+          downloadPdf: 'Download PDF',
+          renderingPdf: 'Rendering all PDF pages in high definition...',
+          pinModalTitle: 'Admin Studio Access',
+          pinModalSubtitle: 'Enter security PIN to manage course PDFs',
+          enterPinLabel: 'Security PIN',
+          unlockBtn: 'Unlock Content Manager',
+          adminBannerTitle: 'Admin Studio Active',
+          adminBannerDesc: 'Add subjects with custom categories, edit details, or hot-swap Explanation & Quiz PDFs anytime.',
+          addSubjectBtn: 'Add New Subject',
+          adminPanelBtn: 'Studio Panel',
+          studioTitle: 'Omar Summaries — Content Studio',
+          studioSubtitle: 'Create custom categories, manage Explanation & Quiz PDFs, or update PIN',
+          lockBtn: 'Lock',
+          addNewFolderHeader: 'Add New Subject Folder',
+          courseCodeLabel: 'Course Code *',
+          categoryLabel: 'Category (Write any category) *',
+          subjectTitleLabel: 'Subject Title *',
+          descriptionLabel: 'Brief Description *',
+          uploadExplainLabel: "1. Explanation PDF (Let's Explain) *",
+          uploadQuizLabel: '2. Questions PDF (Test Yourself) — Optional',
+          createSubjectFolderBtn: 'Save Subject Folder',
+          existingSubjectsHeader: 'Manage Existing Course Folders',
+          restoreDefaultsBtn: 'Restore Default 6 Courses',
+          changePinTitle: 'Update Admin Security PIN',
+          changePinDesc: 'Change the password used to unlock Content Studio.',
+          updatePinBtn: 'Update PIN',
+          editSubjectModalTitle: 'Edit Subject Details & Category'
+        },
+        ar: {
+          brandTagline: 'أرشيف الملخصات الجامعية',
+          headerAiLabel: 'مساعد عمر الذكي',
+          manageContent: 'إدارة المحتوى',
+          heroBadge: 'ملخصات محاضرات جامعية وبنوك أسئلة منظمة',
+          heroTitle: 'أتقن موادك الجامعية مع <span class="gold-gradient-text">ملخصات احترافية</span>',
+          heroSubtitle:
+            'كل مجلد مادة بيضم ملف شرح مبسط وملف أسئلة وامتحانات بأعلى دقة — مع مساعد ذكاء اصطناعي مصري يجاوبك على أي سؤال في المنهج.',
+          searchPlaceholder: 'ابحث باسم المادة، رمز المقرر (مثل ENG-301)، التصنيف، أو الوصف...',
+          catAll: 'الكل',
+          explainBtnLabel: 'يلا بينا نشرح',
+          quizBtnLabel: 'اختبر نفسك',
+          replaceExplainBtn: 'تغيير الشرح',
+          replaceQuizBtn: 'تغيير الأسئلة',
+          updatedLabel: 'تحديث',
+          pagesLabel: 'صفحات',
+          showingPrefix: 'عرض',
+          summariesWord: 'مواد',
+          noResultsTitle: 'لا توجد ملخصات مطابقة',
+          noResultsDesc: 'جرّب تغيير كلمات البحث أو اختيار تصنيف أكاديمي آخر.',
+          resetFilters: 'إعادة ضبط البحث والفلاتر',
+          footerRights: 'التميز الأكاديمي والمعرفة المنظمة',
+          offlineReady: 'التخزين المحلي المزدوج IndexedDB نشط',
+          floatingAiCta: 'اسأل الذكاء الاصطناعي',
+          downloadPdf: 'تحميل PDF',
+          renderingPdf: 'جاري عرض جميع صفحات الملف بأعلى دقة...',
+          pinModalTitle: 'دخول لوحة الإدارة',
+          pinModalSubtitle: 'أدخل رمز الحماية PIN لإدارة ملفات الملخصات',
+          enterPinLabel: 'رمز الحماية PIN',
+          unlockBtn: 'فتح لوحة الإدارة',
+          adminBannerTitle: 'وضع الإدارة مُفعّل',
+          adminBannerDesc: 'يمكنك إضافة مواد بتصنيفات حرة، تعديل البيانات، أو استبدال ملفات الشرح والأسئلة في أي وقت.',
+          addSubjectBtn: 'إضافة مادة جديدة',
+          adminPanelBtn: 'لوحة التحكم',
+          studioTitle: 'ملخصات عمر — استوديو المحتوى',
+          studioSubtitle: 'إضافة مواد وتصنيفات حرة، وتحديث ملفات الشرح والأسئلة وتغيير الرمز',
+          lockBtn: 'قفل',
+          addNewFolderHeader: 'إضافة مجلد مادة جديد',
+          courseCodeLabel: 'رمز المادة *',
+          categoryLabel: 'التصنيف (اكتب أي تصنيف بحرية) *',
+          subjectTitleLabel: 'عنوان المادة *',
+          descriptionLabel: 'وصف مختصر *',
+          uploadExplainLabel: '1. ملف PDF الشرح (يلا بينا نشرح) *',
+          uploadQuizLabel: '2. ملف PDF الأسئلة (اختبر نفسك) — اختياري',
+          createSubjectFolderBtn: 'حفظ مجلد المادة',
+          existingSubjectsHeader: 'إدارة مجلدات المواد الحالية',
+          restoreDefaultsBtn: 'استعادة المواد الافتراضية (6)',
+          changePinTitle: 'تحديث رمز الحماية PIN',
+          changePinDesc: 'تغيير الرمز السري المستخدم لفتح إدارة المحتوى.',
+          updatePinBtn: 'تحديث الرمز',
+          editSubjectModalTitle: 'تعديل بيانات وتصنيف المادة'
+        }
+      };
+
+      // ==================== DEFAULT 6 UNIVERSITY COURSES (WITH EXPLANATION + QUIZ SECTIONS) ====================
+      const DEFAULT_COURSES = [
+        {
+          id: 'eng-301',
+          code: 'ENG-301',
+          category: 'Literature',
+          title: 'Modern British Literature',
+          description:
+            'Comprehensive analysis of Modernist poetry and prose including T.S. Eliot, Virginia Woolf, James Joyce, and W.B. Yeats with thematic breakdowns.',
+          updatedAt: '2026-11-18',
+          explainPageCount: 3,
+          quizPageCount: 2,
+          order: 1,
+          sections: [
+            {
+              heading: '1. Historical Context & The Modernist Rupture',
+              bullets: [
+                'Post-WWI disillusionment shattered Victorian certainty and linear narrative traditions.',
+                'Ezra Pound’s dictum "Make It New" catalyzed radical experimentation in form and syntax.',
+                'Fragmentation, stream-of-consciousness, and mythic parallelism became dominant devices.'
+              ],
+              keyTerms: 'Stream of Consciousness • Objective Correlative • Fragmentation • Imagism'
+            },
+            {
+              heading: '2. T.S. Eliot — The Waste Land (1922)',
+              bullets: [
+                'Five-part modernist epic synthesizing Arthurian Grail legends and post-war London.',
+                'Uses polyphony, untranslated literary allusions, and Tiresias as unifying consciousness.',
+                'Contrasts spiritual aridity ("The Burial of the Dead") with redemptive thunder ("What the Thunder Said").'
+              ],
+              keyTerms: 'Tiresias • Fisher King • Unreal City • Allusion'
+            },
+            {
+              heading: '3. Virginia Woolf — Mrs Dalloway & Interior Time',
+              bullets: [
+                'Contrasts external clock time (Big Ben) with internal psychological duration (Bergsonian time).',
+                'Clarissa Dalloway and Septimus Warren Smith function as structural doubles.',
+                'Free indirect discourse seamlessly bridges narrator and character consciousness.'
+              ],
+              keyTerms: 'Free Indirect Discourse • Moments of Being • Shell Shock • Psychological Time'
+            }
+          ],
+          questions: [
+            {
+              q: 'Q1. Explain T.S. Eliot’s concept of the "Objective Correlative" and how it operates in The Waste Land.',
+              options: [
+                'A) Direct emotional confession by the poet',
+                'B) A set of objects, situation, or chain of events serving as the formula for a particular emotion',
+                'C) Strict adherence to Victorian heroic couplets',
+                'D) Biographical narration of London politics'
+              ],
+              answer: 'Correct Answer: B — Eliot defines the objective correlative in "Hamlet and His Problems" (1919) as externalized sensory imagery evoking exact emotion.'
+            },
+            {
+              q: 'Q2. How do Clarissa Dalloway and Septimus Warren Smith function structurally in Virginia Woolf’s Mrs Dalloway?',
+              options: [
+                'A) They are childhood siblings reunited at a party',
+                'B) They act as psychological doubles contrasting social survival with post-war trauma',
+                'C) Septimus is Clarissa’s political rival',
+                'D) They never share thematic parallels'
+              ],
+              answer: 'Correct Answer: B — Though they never meet physically, Septimus absorbs the tragic toll of war that Clarissa contemplates.'
+            },
+            {
+              q: 'Q3. Essay Prompt: Compare how Modernist writers replace chronological plot with mythic and psychological time.',
+              options: [
+                'Key Points to Include: Bergson’s durée, Big Ben chiming in Woolf, Tiresias & Grail myth in Eliot.'
+              ],
+              answer: 'Model Rubric: Define linear vs. interior time (4 pts), analyze textual evidence from 2 works (6 pts).'
+            }
+          ]
+        },
+        {
+          id: 'lng-204',
+          code: 'LNG-204',
+          category: 'Linguistics',
+          title: 'Sociolinguistics & Discourse',
+          description:
+            'Study of language variation, register, code-switching, politeness theory, and Critical Discourse Analysis (CDA) across multilingual communities.',
+          updatedAt: '2026-11-18',
+          explainPageCount: 3,
+          quizPageCount: 2,
+          order: 2,
+          sections: [
+            {
+              heading: '1. Regional & Social Variation (Labovian Paradigm)',
+              bullets: [
+                'Distinction between dialect (grammar/lexis) and accent (phonological realization).',
+                'William Labov’s Martha’s Vineyard and NYC department store studies on rhoticity.',
+                'Overt prestige (standard norms) vs. covert prestige (in-group solidarity markers).'
+              ],
+              keyTerms: 'Sociolect • Idiolect • Overt/Covert Prestige • Phonological Variable'
+            },
+            {
+              heading: '2. Diglossia, Bilingualism & Code-Switching',
+              bullets: [
+                'Ferguson’s classic diglossia: High (H) formal variety vs. Low (L) vernacular variety (e.g., MSA vs. Egyptian Arabic).',
+                'Myers-Scotton’s Matrix Language Frame (MLF) model for intra-sentential code-switching.',
+                'Situational vs. metaphorical code-switching in academic and digital communication.'
+              ],
+              keyTerms: 'Diglossia • Matrix Language • Code-Mixing • Domain'
+            },
+            {
+              heading: '3. Pragmatics, Politeness & Critical Discourse Analysis',
+              bullets: [
+                'Brown & Levinson’s Face-Threatening Acts (FTAs): positive face vs. negative face strategies.',
+                'Fairclough’s three-dimensional CDA model: text, discursive practice, and social practice.',
+                'Identifying ideological framing through nominalization, passive agent deletion, and modality.'
+              ],
+              keyTerms: 'Face-Threatening Act • CDA • Nominalization • Register'
+            }
+          ],
+          questions: [
+            {
+              q: 'Q1. In Charles Ferguson’s definition of Diglossia, which feature distinguishes the High (H) variety from the Low (L) variety?',
+              options: [
+                'A) H is acquired naturally at home as a mother tongue',
+                'B) H is learned through formal education and reserved for literary, religious, and official domains',
+                'C) L has a larger standardized written grammar than H',
+                'D) Both varieties are used interchangeably in news broadcasts'
+              ],
+              answer: 'Correct Answer: B — In diglossic communities, L is acquired natively at home while H is acquired via schooling.'
+            },
+            {
+              q: 'Q2. According to Brown & Levinson, hedging a request ("Could you possibly lend me your notes?") is an example of:',
+              options: [
+                'A) Bald on-record strategy',
+                'B) Negative politeness (respecting the hearer’s autonomy and freedom from imposition)',
+                'C) Off-record sarcasm',
+                'D) Code-switching'
+              ],
+              answer: 'Correct Answer: B — Negative politeness minimizes imposition on the addressee’s negative face.'
+            }
+          ]
+        },
+        {
+          id: 'trn-310',
+          code: 'TRN-310',
+          category: 'Translation',
+          title: 'Legal & Diplomatic Translation',
+          description:
+            'Specialized English-Arabic translation strategies for contracts, UN resolutions, treaties, archaic legalese, and performative modal verbs.',
+          updatedAt: '2026-11-19',
+          explainPageCount: 3,
+          quizPageCount: 2,
+          order: 3,
+          sections: [
+            {
+              heading: '1. Lexical & Syntactic Features of Legal English',
+              bullets: [
+                'Archaic adverbs (hereinafter, thereof, notwithstanding, whereas) require precise Arabic equivalents.',
+                'Doublets and triplets ("null and void", "terms and conditions") preserve legal completeness.',
+                'Long embedded conditional clauses demand careful structural segmentation in Arabic.'
+              ],
+              keyTerms: 'Hereinafter • Notwithstanding • Legal Doublets • Performative Verbs'
+            },
+            {
+              heading: '2. Deontic Modality: Translating "Shall", "May" & "Must"',
+              bullets: [
+                '"Shall" in binding contracts expresses mandatory obligation, translated via present tense + mandatory verb.',
+                '"May" confers discretionary power or permission.',
+                '"Shall not" imposes strict legal prohibition.'
+              ],
+              keyTerms: 'Deontic Modality • Mandatory Obligation • Discretionary Clause'
+            },
+            {
+              heading: '3. United Nations & Diplomatic Protocol Conventions',
+              bullets: [
+                'Preambular clauses begin with participles (Recalling, Reaffirming, Expressing deep concern).',
+                'Operative clauses use action verbs (Decides, Urges, Calls upon).',
+                'Maintaining diplomatic hedging and constructive ambiguity without distortion.'
+              ],
+              keyTerms: 'Preambular Clause • Operative Paragraph • Diplomatic Hedging'
+            }
+          ],
+          questions: [
+            {
+              q: 'Q1. In binding legal contracts, how should the modal verb "shall" in "The Lessee shall pay rent on the first day of each month" be rendered?',
+              options: [
+                'A) As a future prediction ("will pay")',
+                'B) As a mandatory legal obligation ("must / is obligated to pay")',
+                'C) As an optional suggestion ("may pay")',
+                'D) Omitted entirely'
+              ],
+              answer: 'Correct Answer: B — Legal "shall" carries deontic binding obligation, never mere future tense.'
+            },
+            {
+              q: 'Q2. Which English phrase accurately translates the standard contract term "Force Majeure"?',
+              options: [
+                'A) Voluntary termination',
+                'B) Unforeseeable extraordinary circumstances beyond party control suspending liability',
+                'C) Mutual financial bonus',
+                'D) Preliminary negotiation'
+              ],
+              answer: 'Correct Answer: B — Force Majeure relieves parties from liability when extraordinary events prevent fulfillment.'
+            }
+          ]
+        },
+        {
+          id: 'civ-102',
+          code: 'CIV-102',
+          category: 'Civilization',
+          title: 'History of Western Civilization',
+          description:
+            'From Classical Athens and the Roman Republic through the Renaissance, Enlightenment philosophy, and the Industrial Revolution.',
+          updatedAt: '2026-11-15',
+          explainPageCount: 3,
+          quizPageCount: 2,
+          order: 4,
+          sections: [
+            {
+              heading: '1. Classical Antiquity: Athens & Rome',
+              bullets: [
+                'Athenian direct democracy under Pericles and philosophical foundations (Socrates, Plato, Aristotle).',
+                'Roman Republic checks and balances: Senate, Consuls, Tribunes, and the Twelve Tables of Law.',
+                'Transition from Republic to Principate under Augustus and the Pax Romana.'
+              ],
+              keyTerms: 'Polis • Direct Democracy • Pax Romana • Roman Law'
+            },
+            {
+              heading: '2. The Renaissance & Scientific Revolution',
+              bullets: [
+                'Civic Humanism in Florence: recovery of classical manuscripts and emphasis on human agency.',
+                'Copernicus, Galileo, and Newton replaced Aristotelian cosmology with empirical observation.',
+                'Gutenberg’s printing press accelerated vernacular literacy and intellectual exchange.'
+              ],
+              keyTerms: 'Civic Humanism • Heliocentrism • Empiricism • Printing Revolution'
+            },
+            {
+              heading: '3. The Enlightenment & Constitutionalism',
+              bullets: [
+                'John Locke’s natural rights (life, liberty, property) and social contract theory.',
+                'Montesquieu’s separation of powers and Voltaire’s defense of civil liberties.',
+                'Direct ideological impact on the 1776 American Declaration and 1789 French Revolution.'
+              ],
+              keyTerms: 'Social Contract • Separation of Powers • Popular Sovereignty'
+            }
+          ],
+          questions: [
+            {
+              q: 'Q1. Which Enlightenment philosopher articulated the Separation of Powers into executive, legislative, and judicial branches?',
+              options: [
+                'A) Thomas Hobbes',
+                'B) Baron de Montesquieu (The Spirit of the Laws, 1748)',
+                'C) Niccolò Machiavelli',
+                'D) Francis Bacon'
+              ],
+              answer: 'Correct Answer: B — Montesquieu proposed the tripartite separation of powers to prevent tyranny.'
+            },
+            {
+              q: 'Q2. What was the primary intellectual shift of Renaissance Civic Humanism?',
+              options: [
+                'A) Rejection of all classical Greek and Roman texts',
+                'B) Revival of classical antiquity and focus on human potential, ethics, and civic duty',
+                'C) Exclusive focus on feudal monastic isolation',
+                'D) Opposition to visual arts and architecture'
+              ],
+              answer: 'Correct Answer: B — Humanists studied the studia humanitatis (grammar, rhetoric, history, moral philosophy).'
+            }
+          ]
+        },
+        {
+          id: 'eng-405',
+          code: 'ENG-405',
+          category: 'Literature',
+          title: 'Postcolonial Theory & Criticism',
+          description:
+            'Core theoretical frameworks by Edward Said, Homi Bhabha, Gayatri Spivak, and Chinua Achebe examining empire, hybridity, and representation.',
+          updatedAt: '2026-11-19',
+          explainPageCount: 3,
+          quizPageCount: 2,
+          order: 5,
+          sections: [
+            {
+              heading: '1. Edward Said — Orientalism (1978)',
+              bullets: [
+                'Applies Foucault’s discourse/power nexus to Western academic and literary representations of the East.',
+                'Demonstrates how "the Orient" was constructed as Europe’s silent, exoticized Other.',
+                'Contrapuntal reading uncovers suppressed colonial histories within canonical European novels.'
+              ],
+              keyTerms: 'Orientalism • Othering • Contrapuntal Reading • Discourse'
+            },
+            {
+              heading: '2. Homi K. Bhabha — Hybridity, Mimicry & Third Space',
+              bullets: [
+                'Colonial mimicry produces subjects "almost the same, but not quite", destabilizing colonial authority.',
+                'The Third Space of enunciation rejects cultural essentialism in favor of dynamic hybridity.',
+                'Ambivalence exposes the internal anxieties of imperial power.'
+              ],
+              keyTerms: 'Hybridity • Colonial Mimicry • Third Space • Ambivalence'
+            },
+            {
+              heading: '3. Gayatri Spivak & Chinua Achebe',
+              bullets: [
+                'Spivak’s "Can the Subaltern Speak?" critiques epistemic violence against marginalized subjects.',
+                'Achebe’s "Things Fall Apart" reclaims pre-colonial Igbo agency and challenges Conrad’s "Heart of Darkness".',
+                'Language debate: Ngugi wa Thiong’o (decolonizing the mind) vs. Achebe (indigenizing English).'
+              ],
+              keyTerms: 'Subaltern • Epistemic Violence • Writing Back • Decolonization'
+            }
+          ],
+          questions: [
+            {
+              q: 'Q1. What does Edward Said mean by "Contrapuntal Reading" in Culture and Imperialism?',
+              options: [
+                'A) Reading only the first and last chapters of a novel',
+                'B) Reading canonical Western texts with simultaneous awareness of the colonized histories they marginalize',
+                'C) Translating poetry into musical notation',
+                'D) Ignoring historical context completely'
+              ],
+              answer: 'Correct Answer: B — Contrapuntal reading reveals how imperial wealth and colonies sustain metropolitan plots.'
+            },
+            {
+              q: 'Q2. Homi Bhabha describes colonial mimicry as producing a subject that is:',
+              options: [
+                'A) Identical in every legal respect to the colonizer',
+                'B) "Almost the same, but not quite" — creating an ambivalence that subverts colonial authority',
+                'C) Completely untouched by colonial education',
+                'D) Purely pre-colonial'
+              ],
+              answer: 'Correct Answer: B — That slight slippage turns mimicry into subtle menace.'
+            }
+          ]
+        },
+        {
+          id: 'lng-312',
+          code: 'LNG-312',
+          category: 'Linguistics',
+          title: 'Phonetics & Phonology',
+          description:
+            'Articulatory phonetics, IPA transcription, distinctive features, syllable structure, stress placement, and connected speech processes.',
+          updatedAt: '2026-11-17',
+          explainPageCount: 3,
+          quizPageCount: 2,
+          order: 6,
+          sections: [
+            {
+              heading: '1. Articulatory Phonetics & IPA Classification',
+              bullets: [
+                'Consonants classified by Voicing, Place of Articulation (bilabial to glottal), and Manner (plosive, fricative, affricate, nasal, approximant).',
+                'Vowels mapped on the cardinal quadrilateral by tongue height, backness, and lip rounding.',
+                'Broad phonemic transcription /.../ vs. narrow phonetic transcription [...] with diacritics.'
+              ],
+              keyTerms: 'IPA • Place & Manner • Aspiration • Cardinal Vowels'
+            },
+            {
+              heading: '2. Phonemes, Allophones & Phonological Rules',
+              bullets: [
+                'Minimal pairs establish contrastive phonemes (e.g., /p/ vs. /b/ in "pat" / "bat").',
+                'Complementary distribution governs predictable allophones (aspirated [pʰ] word-initially vs. unaspirated [p] after /s/).',
+                'Formal rule notation: A -> B / X __ Y.'
+              ],
+              keyTerms: 'Minimal Pair • Allophone • Complementary Distribution • Free Variation'
+            },
+            {
+              heading: '3. Connected Speech & Prosodic Phonology',
+              bullets: [
+                'Assimilation (regressive/progressive), elision, liaison (linking /r/ and intrusive /r/), and weak forms.',
+                'Syllable structure: Onset + Rhyme (Nucleus + Coda) governed by the Sonority Sequencing Principle.',
+                'Stress-timed rhythm in English vs. syllable-timed languages.'
+              ],
+              keyTerms: 'Assimilation • Elision • Onset & Coda • Sonority Hierarchy'
+            }
+          ],
+          questions: [
+            {
+              q: 'Q1. Which three articulatory parameters classify English pulmonic consonants?',
+              options: [
+                'A) Height, Backness, Rounding',
+                'B) Voicing, Place of Articulation, and Manner of Articulation',
+                'C) Pitch, Tempo, and Loudness',
+                'D) Onset, Nucleus, and Coda'
+              ],
+              answer: 'Correct Answer: B — e.g., /v/ is a voiced labiodental fricative.'
+            },
+            {
+              q: 'Q2. Why are aspirated [pʰ] in "pin" and unaspirated [p] in "spin" considered allophones of /p/?',
+              options: [
+                'A) Substituting one for the other changes word meaning',
+                'B) They occur in mutually exclusive phonetic environments (complementary distribution)',
+                'C) They are pronounced by different speakers only',
+                'D) Neither is a bilabial stop'
+              ],
+              answer: 'Correct Answer: B — Complementary distribution confirms allophonic realization of a single phoneme.'
+            }
+          ]
+        }
+      ];
+
+      // ==================== INDEXEDDB DUAL-PDF STORAGE ENGINE ====================
+      const DB_NAME = 'OmarSummariesDualVaultDB';
+      const DB_VERSION = 1;
+      const STORE_SUBJECTS = 'subjects';
+      const STORE_FILES = 'pdfFiles';
+
+      function openDatabase() {
+        return new Promise((resolve, reject) => {
+          const req = indexedDB.open(DB_NAME, DB_VERSION);
+          req.onupgradeneeded = (e) => {
+            const db = e.target.result;
+            if (!db.objectStoreNames.contains(STORE_SUBJECTS)) {
+              db.createObjectStore(STORE_SUBJECTS, { keyPath: 'id' });
+            }
+            if (!db.objectStoreNames.contains(STORE_FILES)) {
+              db.createObjectStore(STORE_FILES, { keyPath: 'key' }); // key: `${subjectId}_explain` or `${subjectId}_quiz`
+            }
+          };
+          req.onsuccess = () => resolve(req.result);
+          req.onerror = () => reject(req.error);
+        });
+      }
+
+      async function dbGetAllSubjects() {
+        const db = await openDatabase();
+        return new Promise((resolve, reject) => {
+          const tx = db.transaction(STORE_SUBJECTS, 'readonly');
+          const req = tx.objectStore(STORE_SUBJECTS).getAll();
+          req.onsuccess = () => resolve(req.result || []);
+          req.onerror = () => reject(req.error);
+        });
+      }
+
+      async function dbPutSubject(subject) {
+        const db = await openDatabase();
+        return new Promise((resolve, reject) => {
+          const tx = db.transaction(STORE_SUBJECTS, 'readwrite');
+          tx.objectStore(STORE_SUBJECTS).put(subject);
+          tx.oncomplete = () => resolve();
+          tx.onerror = () => reject(tx.error);
+        });
+      }
+
+      async function dbDeleteSubject(id) {
+        const db = await openDatabase();
+        return new Promise((resolve, reject) => {
+          const tx = db.transaction([STORE_SUBJECTS, STORE_FILES], 'readwrite');
+          tx.objectStore(STORE_SUBJECTS).delete(id);
+          tx.objectStore(STORE_FILES).delete(`${id}_explain`);
+          tx.objectStore(STORE_FILES).delete(`${id}_quiz`);
+          tx.oncomplete = () => resolve();
+          tx.onerror = () => reject(tx.error);
+        });
+      }
+
+      async function dbClearAll() {
+        const db = await openDatabase();
+        return new Promise((resolve, reject) => {
+          const tx = db.transaction([STORE_SUBJECTS, STORE_FILES], 'readwrite');
+          tx.objectStore(STORE_SUBJECTS).clear();
+          tx.objectStore(STORE_FILES).clear();
+          tx.oncomplete = () => resolve();
+          tx.onerror = () => reject(tx.error);
+        });
+      }
+
+      async function dbPutPdfBinary(subjectId, docType, arrayBuffer, fileName) {
+        const db = await openDatabase();
+        const key = `${subjectId}_${docType}`;
+        return new Promise((resolve, reject) => {
+          const tx = db.transaction(STORE_FILES, 'readwrite');
+          tx.objectStore(STORE_FILES).put({
+            key,
+            subjectId,
+            docType,
+            data: arrayBuffer,
+            fileName: fileName || `${key}.pdf`,
+            updatedAt: Date.now()
+          });
+          tx.oncomplete = () => resolve();
+          tx.onerror = () => reject(tx.error);
+        });
+      }
+
+      async function dbGetPdfBinary(subjectId, docType) {
+        const db = await openDatabase();
+        const key = `${subjectId}_${docType}`;
+        return new Promise((resolve, reject) => {
+          const tx = db.transaction(STORE_FILES, 'readonly');
+          const req = tx.objectStore(STORE_FILES).get(key);
+          req.onsuccess = () => resolve(req.result || null);
+          req.onerror = () => reject(req.error);
+        });
+      }
+
+      // ==================== DYNAMIC MULTI-PAGE PDF GENERATOR (jsPDF) ====================
+      function synthesizeExplanationPdfBuffer(course) {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'a4' });
+        const pageW = doc.internal.pageSize.getWidth();
+        const pageH = doc.internal.pageSize.getHeight();
+        const margin = 48;
+        const contentW = pageW - margin * 2;
+
+        const drawChrome = (pageNum, totalPages) => {
+          doc.setFillColor(14, 14, 14);
+          doc.rect(0, 0, pageW, 54, 'F');
+          doc.setDrawColor(212, 175, 55);
+          doc.setLineWidth(1.5);
+          doc.line(0, 54, pageW, 54);
+
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(11);
+          doc.setTextColor(212, 175, 55);
+          doc.text("OMAR SUMMARIES — LET'S EXPLAIN", margin, 33);
+
+          doc.setFont('helvetica', 'normal');
+          doc.setFontSize(9.5);
+          doc.setTextColor(243, 229, 171);
+          doc.text(`${course.code}  |  ${course.category.toUpperCase()}`, pageW - margin, 33, { align: 'right' });
+
+          doc.setDrawColor(220, 220, 220);
+          doc.setLineWidth(0.75);
+          doc.line(margin, pageH - 42, pageW - margin, pageH - 42);
+
+          doc.setFontSize(8.5);
+          doc.setTextColor(110, 110, 110);
+          doc.text(`Omar Summaries Academic Vault • Updated: ${course.updatedAt}`, margin, pageH - 26);
+          doc.setFont('helvetica', 'bold');
+          doc.setTextColor(60, 60, 60);
+          doc.text(`Page ${pageNum} of ${totalPages}`, pageW - margin, pageH - 26, { align: 'right' });
+        };
+
+        const sections = course.sections || [
+          {
+            heading: '1. Course Summary & Key Concepts',
+            bullets: [course.description],
+            keyTerms: `${course.code} • ${course.category}`
+          }
+        ];
+
+        sections.forEach((sec, idx) => {
+          if (idx > 0) doc.addPage();
+          let y = 84;
+
+          if (idx === 0) {
+            doc.setFillColor(248, 246, 240);
+            doc.setDrawColor(212, 175, 55);
+            doc.setLineWidth(1);
+            doc.roundedRect(margin, y, contentW, 112, 6, 6, 'FD');
+
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(10);
+            doc.setTextColor(170, 138, 38);
+            doc.text(`LECTURE EXPLANATION GUIDE • ${course.code}`, margin + 18, y + 24);
+
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(19);
+            doc.setTextColor(18, 18, 18);
+            doc.text(doc.splitTextToSize(course.title, contentW - 36), margin + 18, y + 48);
+
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(10);
+            doc.setTextColor(75, 75, 75);
+            doc.text(doc.splitTextToSize(course.description, contentW - 36), margin + 18, y + 76);
+
+            y += 136;
+          }
+
+          doc.setFillColor(20, 20, 20);
+          doc.roundedRect(margin, y, contentW, 32, 4, 4, 'F');
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(12);
+          doc.setTextColor(243, 229, 171);
+          doc.text(sec.heading, margin + 14, y + 20);
+          y += 50;
+
+          sec.bullets.forEach((bullet, bIdx) => {
+            doc.setFillColor(212, 175, 55);
+            doc.circle(margin + 8, y - 4, 3, 'F');
+
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(11);
+            doc.setTextColor(30, 30, 30);
+            const wrapped = doc.splitTextToSize(bullet, contentW - 24);
+            doc.text(wrapped, margin + 20, y);
+            y += wrapped.length * 16 + 14;
+
+            doc.setFillColor(250, 250, 250);
+            doc.setDrawColor(230, 230, 230);
+            const noteText = `Study Note ${idx + 1}.${bIdx + 1}: Connect theoretical concepts with primary textual examples and precise academic definitions for full exam credit.`;
+            const noteLines = doc.splitTextToSize(noteText, contentW - 36);
+            const boxH = noteLines.length * 14 + 16;
+            doc.roundedRect(margin + 18, y - 6, contentW - 18, boxH, 4, 4, 'FD');
+
+            doc.setFont('helvetica', 'italic');
+            doc.setFontSize(9.5);
+            doc.setTextColor(85, 85, 85);
+            doc.text(noteLines, margin + 28, y + 9);
+            y += boxH + 16;
+          });
+
+          if (sec.keyTerms) {
+            y = Math.max(y + 10, pageH - 135);
+            doc.setFillColor(252, 249, 240);
+            doc.setDrawColor(212, 175, 55);
+            doc.setLineWidth(1);
+            doc.roundedRect(margin, y, contentW, 54, 5, 5, 'FD');
+
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(9.5);
+            doc.setTextColor(170, 138, 38);
+            doc.text('KEY TERMINOLOGY & CONCEPTS:', margin + 14, y + 20);
+
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(10);
+            doc.setTextColor(25, 25, 25);
+            doc.text(sec.keyTerms, margin + 14, y + 38);
+          }
+
+          drawChrome(idx + 1, sections.length);
+        });
+
+        return doc.output('arraybuffer');
+      }
+
+      function synthesizeQuizPdfBuffer(course) {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'a4' });
+        const pageW = doc.internal.pageSize.getWidth();
+        const pageH = doc.internal.pageSize.getHeight();
+        const margin = 48;
+        const contentW = pageW - margin * 2;
+
+        const questions = course.questions || [
+          {
+            q: `Q1. Discuss the primary theoretical foundations covered in ${course.title} (${course.code}).`,
+            options: ['A) Core Definitions & Historical Scope', 'B) Key Analytical Frameworks', 'C) Practical Exam Application'],
+            answer: 'Review the Explanation PDF for complete structured definitions and textual evidence.'
+          }
+        ];
+
+        const totalPages = 2;
+
+        // Page 1: Practice Exam Questions
+        doc.setFillColor(24, 24, 27);
+        doc.rect(0, 0, pageW, 54, 'F');
+        doc.setDrawColor(212, 175, 55);
+        doc.setLineWidth(1.5);
+        doc.line(0, 54, pageW, 54);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(11);
+        doc.setTextColor(243, 229, 171);
+        doc.text('OMAR SUMMARIES — TEST YOURSELF (PRACTICE EXAM)', margin, 33);
+        doc.text(course.code, pageW - margin, 33, { align: 'right' });
+
+        let y = 84;
+        doc.setFillColor(252, 249, 240);
+        doc.setDrawColor(212, 175, 55);
+        doc.roundedRect(margin, y, contentW, 72, 6, 6, 'FD');
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(16);
+        doc.setTextColor(20, 20, 20);
+        doc.text(`${course.title} — Self-Assessment`, margin + 16, y + 28);
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(10);
+        doc.setTextColor(80, 80, 80);
+        doc.text('Attempt all questions before checking the Model Answer Key on Page 2.', margin + 16, y + 50);
+
+        y += 98;
+
+        questions.forEach((item) => {
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(11);
+          doc.setTextColor(18, 18, 18);
+          const qLines = doc.splitTextToSize(item.q, contentW);
+          doc.text(qLines, margin, y);
+          y += qLines.length * 16 + 8;
+
+          (item.options || []).forEach((opt) => {
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(10.5);
+            doc.setTextColor(55, 55, 55);
+            const optLines = doc.splitTextToSize(opt, contentW - 20);
+            doc.text(optLines, margin + 16, y);
+            y += optLines.length * 15 + 6;
+          });
+          y += 16;
+        });
+
+        doc.setFontSize(8.5);
+        doc.setTextColor(110, 110, 110);
+        doc.text(`Omar Summaries Practice Bank • ${course.code}`, margin, pageH - 26);
+        doc.text(`Page 1 of ${totalPages}`, pageW - margin, pageH - 26, { align: 'right' });
+
+        // Page 2: Model Answer Key
+        doc.addPage();
+        doc.setFillColor(24, 24, 27);
+        doc.rect(0, 0, pageW, 54, 'F');
+        doc.setDrawColor(212, 175, 55);
+        doc.line(0, 54, pageW, 54);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(11);
+        doc.setTextColor(212, 175, 55);
+        doc.text('MODEL ANSWER KEY & EXPLANATIONS', margin, 33);
+        doc.text(course.code, pageW - margin, 33, { align: 'right' });
+
+        y = 90;
+        questions.forEach((item, idx) => {
+          doc.setFillColor(248, 246, 240);
+          doc.setDrawColor(212, 175, 55);
+          const ansLines = doc.splitTextToSize(item.answer, contentW - 28);
+          const boxH = ansLines.length * 15 + 34;
+          doc.roundedRect(margin, y, contentW, boxH, 5, 5, 'FD');
+
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(10.5);
+          doc.setTextColor(170, 138, 38);
+          doc.text(`Question ${idx + 1} Solution:`, margin + 14, y + 20);
+
+          doc.setFont('helvetica', 'normal');
+          doc.setFontSize(10);
+          doc.setTextColor(25, 25, 25);
+          doc.text(ansLines, margin + 14, y + 38);
+          y += boxH + 18;
+        });
+
+        doc.setFontSize(8.5);
+        doc.setTextColor(110, 110, 110);
+        doc.text(`Omar Summaries Practice Bank • ${course.code}`, margin, pageH - 26);
+        doc.text(`Page 2 of ${totalPages}`, pageW - margin, pageH - 26, { align: 'right' });
+
+        return doc.output('arraybuffer');
+      }
+
+      // ==================== APPLICATION STATE ====================
+      const state = {
+        theme: localStorage.getItem('omar_theme') || 'dark',
+        lang: localStorage.getItem('omar_lang') || 'en',
+        subjects: [],
+        activeCategory: 'All',
+        searchQuery: '',
+        isAdminUnlocked: false,
+        adminPin: localStorage.getItem('omar_admin_pin') || '1234',
+        viewer: {
+          isOpen: false,
+          subject: null,
+          docType: 'explain', // 'explain' | 'quiz'
+          pdfDoc: null,
+          blobUrl: null,
+          scale: 1.0,
+          currentPage: 1,
+          totalPages: 1,
+          renderMode: 'canvas'
+        },
+        aiHistory: []
+      };
+
+      // ==================== TOAST NOTIFICATIONS ====================
+      function showToast(message, type = 'success') {
+        const container = document.getElementById('toastContainer');
+        const toast = document.createElement('div');
+        const borderClass =
+          type === 'error'
+            ? 'border-red-500/60 bg-white dark:bg-charcoal text-red-600 dark:text-red-200'
+            : 'border-gold-antique/60 dark:border-gold/60 bg-white dark:bg-charcoal text-ink dark:text-gold-light';
+        const iconName = type === 'error' ? 'alert-circle' : 'check-circle-2';
+        const iconColor = type === 'error' ? 'text-red-500 dark:text-red-400' : 'text-gold-antique dark:text-gold';
+
+        toast.className = `pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-xl border ${borderClass} shadow-2xl animate-fade-in-up text-xs sm:text-sm font-medium`;
+        toast.innerHTML = `
+          <i data-lucide="${iconName}" class="w-4 h-4 ${iconColor} shrink-0"></i>
+          <span class="flex-1">${message}</span>
+        `;
+        container.appendChild(toast);
+        if (window.lucide) window.lucide.createIcons({ root: toast });
+
+        setTimeout(() => {
+          toast.style.opacity = '0';
+          toast.style.transform = 'translateY(-8px)';
+          toast.style.transition = 'all 0.3s ease';
+          setTimeout(() => toast.remove(), 300);
+        }, 3200);
+      }
+
+      // ==================== THEME (LIGHT / DARK) SWITCHER ====================
+      function applyTheme(theme) {
+        state.theme = theme;
+        localStorage.setItem('omar_theme', theme);
+        const htmlEl = document.documentElement;
+        const iconEl = document.getElementById('themeIcon');
+        const labelEl = document.getElementById('themeToggleLabel');
+
+        if (theme === 'dark') {
+          htmlEl.classList.add('dark');
+          if (iconEl) iconEl.setAttribute('data-lucide', 'sun');
+          if (labelEl) labelEl.textContent = state.lang === 'ar' ? 'فاتح' : 'Light';
+        } else {
+          htmlEl.classList.remove('dark');
+          if (iconEl) iconEl.setAttribute('data-lucide', 'moon');
+          if (labelEl) labelEl.textContent = state.lang === 'ar' ? 'غامق' : 'Dark';
+        }
+        if (window.lucide) window.lucide.createIcons();
+      }
+
+      // ==================== INITIALIZE & SEED INDEXEDDB ====================
+      async function initializeVault() {
+        try {
+          let stored = await dbGetAllSubjects();
+          if (!stored || stored.length === 0) {
+            for (const course of DEFAULT_COURSES) {
+              const explainBuf = synthesizeExplanationPdfBuffer(course);
+              const quizBuf = synthesizeQuizPdfBuffer(course);
+              await dbPutPdfBinary(course.id, 'explain', explainBuf, `${course.code}-Explanation.pdf`);
+              await dbPutPdfBinary(course.id, 'quiz', quizBuf, `${course.code}-Practice-Quiz.pdf`);
+
+              const { sections, questions, ...meta } = course;
+              await dbPutSubject({
+                ...meta,
+                explainSourceType: 'indexeddb',
+                quizSourceType: 'indexeddb'
+              });
+            }
+            stored = await dbGetAllSubjects();
+          }
+
+          state.subjects = stored.sort((a, b) => (a.order || 0) - (b.order || 0));
+          applyTheme(state.theme);
+          applyLanguage(state.lang);
+          updateCategorySuggestions();
+          renderCategoryPills();
+          renderSubjectsGrid();
+          renderAdminSubjectList();
+          initAiChatWelcome();
+        } catch (err) {
+          console.error('Vault init error:', err);
+          showToast('Error initializing offline PDF vault.', 'error');
+        } finally {
+          const loader = document.getElementById('bootLoader');
+          if (loader) {
+            loader.style.opacity = '0';
+            setTimeout(() => loader.remove(), 500);
+          }
+        }
+      }
+
+      // ==================== LANGUAGE & RTL/LTR TOGGLE ====================
+      function applyLanguage(lang) {
+        state.lang = lang;
+        localStorage.setItem('omar_lang', lang);
+        const htmlEl = document.documentElement;
+        htmlEl.setAttribute('lang', lang);
+        htmlEl.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+
+        const toggleLabel = document.getElementById('langToggleLabel');
+        if (toggleLabel) toggleLabel.textContent = lang === 'en' ? 'عربي' : 'EN';
+
+        const themeLabel = document.getElementById('themeToggleLabel');
+        if (themeLabel) {
+          if (state.theme === 'dark') {
+            themeLabel.textContent = lang === 'ar' ? 'فاتح' : 'Light';
+          } else {
+            themeLabel.textContent = lang === 'ar' ? 'غامق' : 'Dark';
+          }
+        }
+
+        const dict = TRANSLATIONS[lang];
+        document.querySelectorAll('[data-i18n]').forEach((el) => {
+          const key = el.getAttribute('data-i18n');
+          if (dict[key]) {
+            el.innerHTML = dict[key];
+          }
+        });
+
+        document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
+          const key = el.getAttribute('data-i18n-placeholder');
+          if (dict[key]) {
+            el.setAttribute('placeholder', dict[key]);
+          }
+        });
+
+        renderCategoryPills();
+        renderSubjectsGrid();
+      }
+
+      // ==================== DYNAMIC CATEGORY FILTER PILLS & AUTOCOMPLETE ====================
+      function getUniqueCategories() {
+        const set = new Set();
+        state.subjects.forEach((s) => {
+          if (s.category && s.category.trim()) {
+            set.add(s.category.trim());
+          }
+        });
+        return Array.from(set);
+      }
+
+      function updateCategorySuggestions() {
+        const datalist = document.getElementById('categorySuggestions');
+        if (!datalist) return;
+        const cats = getUniqueCategories();
+        datalist.innerHTML = cats.map((c) => `<option value="${escapeHtml(c)}"></option>`).join('');
+      }
+
+      function renderCategoryPills() {
+        const container = document.getElementById('categoryPills');
+        const dict = TRANSLATIONS[state.lang];
+        const dynamicCats = ['All', ...getUniqueCategories()];
+
+        // Reset activeCategory if its category was deleted/renamed
+        if (state.activeCategory !== 'All' && !dynamicCats.includes(state.activeCategory)) {
+          state.activeCategory = 'All';
+        }
+
+        container.innerHTML = dynamicCats
+          .map((cat) => {
+            const count =
+              cat === 'All'
+                ? state.subjects.length
+                : state.subjects.filter((s) => s.category === cat).length;
+            const isActive = state.activeCategory === cat;
+            const label = cat === 'All' ? dict.catAll : cat;
+            const activeClasses = isActive
+              ? 'bg-gold text-matte border-gold font-bold shadow-[0_0_16px_rgba(212,175,55,0.35)]'
+              : 'bg-white dark:bg-charcoal text-zinc-700 dark:text-neutral-300 border-zinc-200 dark:border-neutral-800 hover:border-gold-antique dark:hover:border-gold/45 hover:text-gold-antique dark:hover:text-gold-light';
+
+            return `
+              <button
+                type="button"
+                data-cat="${escapeHtml(cat)}"
+                class="category-pill px-4 py-2 rounded-full border text-xs sm:text-sm transition-all flex items-center gap-2 cursor-pointer ${activeClasses}"
+              >
+                <span>${escapeHtml(label)}</span>
+                <span class="px-1.5 py-0.5 rounded-full text-[11px] ${
+                  isActive ? 'bg-matte/20 text-matte' : 'bg-zinc-100 dark:bg-obsidian text-zinc-500 dark:text-neutral-400'
+                }">${count}</span>
+              </button>
+            `;
+          })
+          .join('');
+
+        container.querySelectorAll('.category-pill').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            state.activeCategory = btn.getAttribute('data-cat');
+            renderCategoryPills();
+            renderSubjectsGrid();
+          });
+        });
+      }
+
+      // ==================== RENDER DUAL-PDF SUBJECTS DIGITAL FOLDER GRID ====================
+      function getFilteredSubjects() {
+        const q = state.searchQuery.trim().toLowerCase();
+        return state.subjects.filter((sub) => {
+          const matchesCat =
+            state.activeCategory === 'All' || sub.category === state.activeCategory;
+          const matchesQuery =
+            !q ||
+            sub.title.toLowerCase().includes(q) ||
+            sub.code.toLowerCase().includes(q) ||
+            sub.description.toLowerCase().includes(q) ||
+            sub.category.toLowerCase().includes(q);
+          return matchesCat && matchesQuery;
+        });
+      }
+
+      function renderSubjectsGrid() {
+        const grid = document.getElementById('subjectsGrid');
+        const emptyState = document.getElementById('emptyState');
+        const countLabel = document.getElementById('resultsCountText');
+        const dict = TRANSLATIONS[state.lang];
+
+        const filtered = getFilteredSubjects();
+        countLabel.textContent = `${dict.showingPrefix} ${filtered.length} ${dict.summariesWord}`;
+
+        if (filtered.length === 0) {
+          grid.innerHTML = '';
+          grid.classList.add('hidden');
+          emptyState.classList.remove('hidden');
+          return;
+        }
+
+        emptyState.classList.add('hidden');
+        grid.classList.remove('hidden');
+
+        grid.innerHTML = filtered
+          .map((sub, idx) => {
+            const adminQuickBar = state.isAdminUnlocked
+              ? `
+                <div class="mt-3 pt-3 border-t border-gold-antique/25 dark:border-gold/20 grid grid-cols-2 gap-1.5">
+                  <label class="px-2.5 py-1.5 rounded-lg bg-zinc-100 dark:bg-obsidian hover:bg-zinc-200 dark:hover:bg-neutral-800 border border-gold-antique/40 dark:border-gold/40 text-gold-antique dark:text-gold-light text-[11px] font-semibold flex items-center justify-center gap-1 cursor-pointer transition-colors">
+                    <i data-lucide="refresh-cw" class="w-3 h-3 text-gold-antique dark:text-gold"></i>
+                    <span class="truncate">${dict.replaceExplainBtn}</span>
+                    <input type="file" accept="application/pdf" data-replace-id="${sub.id}" data-doc-type="explain" class="hidden quick-replace-input" />
+                  </label>
+                  <label class="px-2.5 py-1.5 rounded-lg bg-zinc-100 dark:bg-obsidian hover:bg-zinc-200 dark:hover:bg-neutral-800 border border-gold-antique/40 dark:border-gold/40 text-gold-antique dark:text-gold-light text-[11px] font-semibold flex items-center justify-center gap-1 cursor-pointer transition-colors">
+                    <i data-lucide="refresh-cw" class="w-3 h-3 text-gold-antique dark:text-gold"></i>
+                    <span class="truncate">${dict.replaceQuizBtn}</span>
+                    <input type="file" accept="application/pdf" data-replace-id="${sub.id}" data-doc-type="quiz" class="hidden quick-replace-input" />
+                  </label>
+                </div>
+              `
+              : '';
+
+            return `
+              <article
+                class="folder-card p-6 flex flex-col justify-between animate-fade-in-up shadow-sm dark:shadow-none"
+                style="animation-delay: ${Math.min(idx * 50, 350)}ms"
+              >
+                <div class="folder-tab"></div>
+
+                <div>
+                  <!-- Top Row: Course Code Badge & Category -->
+                  <div class="flex items-center justify-between gap-2 mb-4">
+                    <span class="px-2.5 py-1 rounded-lg bg-gold/15 border border-gold-antique/40 dark:border-gold/40 text-gold-antique dark:text-gold text-xs font-extrabold tracking-wider">
+                      ${escapeHtml(sub.code)}
+                    </span>
+                    <span class="text-xs font-semibold text-zinc-600 dark:text-neutral-300 bg-zinc-100 dark:bg-obsidian px-2.5 py-1 rounded-full border border-zinc-200 dark:border-neutral-800">
+                      ${escapeHtml(sub.category)}
+                    </span>
+                  </div>
+
+                  <!-- Subject Title -->
+                  <h3 class="text-lg sm:text-xl font-bold text-ink dark:text-white leading-snug mb-2.5">
+                    ${escapeHtml(sub.title)}
+                  </h3>
+
+                  <!-- Description -->
+                  <p class="text-xs sm:text-sm text-zinc-600 dark:text-neutral-400 leading-relaxed line-clamp-3 mb-5">
+                    ${escapeHtml(sub.description)}
+                  </p>
+                </div>
+
+                <div>
+                  <!-- Metadata Footer -->
+                  <div class="flex items-center justify-between text-[11px] text-zinc-500 dark:text-neutral-500 mb-4 pb-3 border-b border-zinc-200 dark:border-neutral-800/80">
+                    <span class="inline-flex items-center gap-1.5">
+                      <i data-lucide="calendar" class="w-3.5 h-3.5 text-gold-antique dark:text-gold/80"></i>
+                      <span>${dict.updatedLabel}: ${escapeHtml(sub.updatedAt)}</span>
+                    </span>
+                    <span class="inline-flex items-center gap-1.5 text-zinc-600 dark:text-neutral-400 font-medium">
+                      <i data-lucide="files" class="w-3.5 h-3.5 text-gold-antique dark:text-gold/80"></i>
+                      <span>2 PDFs</span>
+                    </span>
+                  </div>
+
+                  <!-- Dual Action Buttons: "Let's Explain / يلا بينا نشرح" & "Test Yourself / اختبر نفسك" -->
+                  <div class="grid grid-cols-2 gap-2.5">
+                    <button
+                      type="button"
+                      data-open-id="${sub.id}"
+                      data-doc-type="explain"
+                      class="view-pdf-btn gold-btn py-2.5 px-3 rounded-xl text-xs sm:text-sm flex items-center justify-center gap-1.5 cursor-pointer"
+                    >
+                      <i data-lucide="book-open" class="w-4 h-4 shrink-0"></i>
+                      <span class="truncate">${dict.explainBtnLabel}</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      data-open-id="${sub.id}"
+                      data-doc-type="quiz"
+                      class="view-pdf-btn py-2.5 px-3 rounded-xl bg-zinc-100 dark:bg-obsidian hover:bg-gold/15 dark:hover:bg-gold/15 border border-gold-antique/55 dark:border-gold/50 text-gold-antique dark:text-gold-light font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+                    >
+                      <i data-lucide="help-circle" class="w-4 h-4 text-gold-antique dark:text-gold shrink-0"></i>
+                      <span class="truncate">${dict.quizBtnLabel}</span>
+                    </button>
+                  </div>
+
+                  ${adminQuickBar}
+                </div>
+              </article>
+            `;
+          })
+          .join('');
+
+        if (window.lucide) window.lucide.createIcons({ root: grid });
+
+        // Bind Dual View PDF Buttons
+        grid.querySelectorAll('.view-pdf-btn').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const id = btn.getAttribute('data-open-id');
+            const docType = btn.getAttribute('data-doc-type') || 'explain';
+            openPdfViewer(id, docType);
+          });
+        });
+
+        // Bind Inline Admin Quick Replace PDF
+        grid.querySelectorAll('.quick-replace-input').forEach((input) => {
+          input.addEventListener('change', async (e) => {
+            const file = e.target.files && e.target.files[0];
+            if (!file) return;
+            const id = input.getAttribute('data-replace-id');
+            const docType = input.getAttribute('data-doc-type');
+            await replaceSubjectPdfFile(id, docType, file);
+          });
+        });
+      }
+
+      // ==================== FULL-SCREEN PDF VIEWER ====================
+      function updateViewerSwitcherTabs(docType) {
+        const expBtn = document.getElementById('viewerSwitchExplainBtn');
+        const quizBtn = document.getElementById('viewerSwitchQuizBtn');
+        if (docType === 'explain') {
+          expBtn.className = 'px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer bg-gold text-matte';
+          quizBtn.className = 'px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer text-neutral-300 hover:text-gold';
+        } else {
+          quizBtn.className = 'px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer bg-gold text-matte';
+          expBtn.className = 'px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer text-neutral-300 hover:text-gold';
+        }
+      }
+
+      async function openPdfViewer(subjectId, docType = 'explain') {
+        const subject = state.subjects.find((s) => s.id === subjectId);
+        if (!subject) return;
+
+        const modal = document.getElementById('pdfViewerModal');
+        const loadingState = document.getElementById('pdfLoadingState');
+        const pagesWrapper = document.getElementById('pdfPagesWrapper');
+        const nativeFrame = document.getElementById('nativePdfFrame');
+
+        pagesWrapper.innerHTML = '';
+        nativeFrame.classList.add('hidden');
+        nativeFrame.src = '';
+        loadingState.classList.remove('hidden');
+
+        const dict = TRANSLATIONS[state.lang];
+        const modeLabel = docType === 'explain' ? dict.explainBtnLabel : dict.quizBtnLabel;
+
+        document.getElementById('viewerCourseCode').textContent = subject.code;
+        document.getElementById('viewerTitle').textContent = `${subject.title} (${modeLabel})`;
+        document.getElementById('viewerMeta').textContent = `${subject.category} • ${subject.updatedAt}`;
+        updateViewerSwitcherTabs(docType);
+
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        document.body.style.overflow = 'hidden';
+
+        if (state.viewer.blobUrl) {
+          URL.revokeObjectURL(state.viewer.blobUrl);
+          state.viewer.blobUrl = null;
+        }
+
+        state.viewer.isOpen = true;
+        state.viewer.subject = subject;
+        state.viewer.docType = docType;
+        state.viewer.scale = 1.0;
+        state.viewer.currentPage = 1;
+        state.viewer.renderMode = 'canvas';
+        document.getElementById('renderModeLabel').textContent = 'HD Canvas';
+        document.getElementById('zoomResetBtn').textContent = '100%';
+
+        try {
+          let pdfSource = null;
+          const isUrlSource =
+            (docType === 'explain' && subject.explainSourceType === 'url' && subject.explainPdfUrl) ||
+            (docType === 'quiz' && subject.quizSourceType === 'url' && subject.quizPdfUrl);
+
+          if (isUrlSource) {
+            const url = docType === 'explain' ? subject.explainPdfUrl : subject.quizPdfUrl;
+            pdfSource = url;
+            nativeFrame.src = url;
+          } else {
+            const record = await dbGetPdfBinary(subject.id, docType);
+            if (!record || !record.data) {
+              // Fallback: if quiz PDF wasn't uploaded for a custom subject, synthesize a clean prompt PDF on the fly
+              if (docType === 'quiz') {
+                const generatedQuiz = synthesizeQuizPdfBuffer(subject);
+                await dbPutPdfBinary(subject.id, 'quiz', generatedQuiz, `${subject.code}-Quiz.pdf`);
+                const blob = new Blob([generatedQuiz], { type: 'application/pdf' });
+                state.viewer.blobUrl = URL.createObjectURL(blob);
+                nativeFrame.src = state.viewer.blobUrl;
+                pdfSource = { data: generatedQuiz.slice(0) };
+              } else {
+                throw new Error('PDF binary not found in IndexedDB.');
+              }
+            } else {
+              const blob = new Blob([record.data], { type: 'application/pdf' });
+              const blobUrl = URL.createObjectURL(blob);
+              state.viewer.blobUrl = blobUrl;
+              nativeFrame.src = blobUrl;
+              pdfSource = { data: record.data.slice(0) };
+            }
+          }
+
+          const loadingTask = window.pdfjsLib.getDocument(pdfSource);
+          const pdfDoc = await loadingTask.promise;
+          state.viewer.pdfDoc = pdfDoc;
+          state.viewer.totalPages = pdfDoc.numPages;
+
+          document.getElementById('totalPagesLabel').textContent = pdfDoc.numPages;
+          const pageInput = document.getElementById('pageNumberInput');
+          pageInput.max = pdfDoc.numPages;
+          pageInput.value = 1;
+
+          await renderAllPdfPages();
+        } catch (err) {
+          console.error('Error loading PDF:', err);
+          loadingState.classList.add('hidden');
+          if (nativeFrame.src) {
+            state.viewer.renderMode = 'native';
+            document.getElementById('renderModeLabel').textContent = 'Native Frame';
+            nativeFrame.classList.remove('hidden');
+          } else {
+            showToast('Could not load PDF file.', 'error');
+          }
+        }
+      }
+
+      async function renderAllPdfPages() {
+        const pdfDoc = state.viewer.pdfDoc;
+        if (!pdfDoc) return;
+
+        const loadingState = document.getElementById('pdfLoadingState');
+        const pagesWrapper = document.getElementById('pdfPagesWrapper');
+        const scrollContainer = document.getElementById('pdfScrollContainer');
+
+        loadingState.classList.remove('hidden');
+        pagesWrapper.innerHTML = '';
+
+        const availableWidth = Math.min(scrollContainer.clientWidth - 32, 920);
+        const outputScale = Math.min(window.devicePixelRatio || 1, 2.5);
+
+        for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
+          const page = await pdfDoc.getPage(pageNum);
+          const unscaledViewport = page.getViewport({ scale: 1 });
+          const fitScale = (availableWidth / unscaledViewport.width) * state.viewer.scale;
+          const viewport = page.getViewport({ scale: fitScale });
+
+          const sheet = document.createElement('div');
+          sheet.className = 'pdf-page-sheet relative';
+          sheet.setAttribute('data-page-num', pageNum);
+          sheet.style.width = `${Math.floor(viewport.width)}px`;
+          sheet.style.height = `${Math.floor(viewport.height)}px`;
+
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          canvas.width = Math.floor(viewport.width * outputScale);
+          canvas.height = Math.floor(viewport.height * outputScale);
+          canvas.style.width = `${Math.floor(viewport.width)}px`;
+          canvas.style.height = `${Math.floor(viewport.height)}px`;
+
+          sheet.appendChild(canvas);
+          pagesWrapper.appendChild(sheet);
+
+          const transform = outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null;
+          await page.render({
+            canvasContext: ctx,
+            transform,
+            viewport
+          }).promise;
+        }
+
+        loadingState.classList.add('hidden');
+        document.getElementById('zoomResetBtn').textContent = `${Math.round(state.viewer.scale * 100)}%`;
+      }
+
+      function closePdfViewer() {
+        const modal = document.getElementById('pdfViewerModal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        document.body.style.overflow = '';
+        state.viewer.isOpen = false;
+        state.viewer.pdfDoc = null;
+
+        if (document.fullscreenElement) {
+          document.exitFullscreen().catch(() => {});
+        }
+      }
+
+      function scrollToPdfPage(pageNum) {
+        const clamped = Math.max(1, Math.min(pageNum, state.viewer.totalPages));
+        state.viewer.currentPage = clamped;
+        document.getElementById('pageNumberInput').value = clamped;
+
+        const targetSheet = document.querySelector(`.pdf-page-sheet[data-page-num="${clamped}"]`);
+        if (targetSheet) {
+          targetSheet.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+
+      document.getElementById('pdfScrollContainer').addEventListener('scroll', () => {
+        if (!state.viewer.isOpen || state.viewer.renderMode !== 'canvas') return;
+        const container = document.getElementById('pdfScrollContainer');
+        const sheets = document.querySelectorAll('.pdf-page-sheet');
+        const containerMid = container.getBoundingClientRect().top + container.clientHeight * 0.35;
+
+        sheets.forEach((sheet) => {
+          const rect = sheet.getBoundingClientRect();
+          if (rect.top <= containerMid && rect.bottom >= containerMid) {
+            const p = parseInt(sheet.getAttribute('data-page-num'), 10);
+            if (p && p !== state.viewer.currentPage) {
+              state.viewer.currentPage = p;
+              document.getElementById('pageNumberInput').value = p;
+            }
+          }
+        });
+      });
+
+      // ==================== EGYPTIAN ARABIC AI STUDY ASSISTANT ("مساعد عمر الذكي") ====================
+      function initAiChatWelcome() {
+        const container = document.getElementById('aiMessagesContainer');
+        if (!container) return;
+        state.aiHistory = [];
+        container.innerHTML = '';
+        appendAiBubble(
+          'model',
+          'أهلاً بيك يا بطل في منصة **Omar Summaries**! 👋✨\nأنا **مساعد عمر الذكي**، معاك في أي وقت عشان أشرحلك أي جزئية في المواد، أعملك أسئلة وامتحانات تتدرب عليها، أو أجاوبك على أي سؤال في دماغك.\n\nتحب نبدأ بإيه النهاردة؟'
+        );
+      }
+
+      function appendAiBubble(role, text) {
+        const container = document.getElementById('aiMessagesContainer');
+        const wrapper = document.createElement('div');
+        const isUser = role === 'user';
+
+        wrapper.className = `flex ${isUser ? 'justify-start' : 'justify-end'} animate-fade-in-up`;
+
+        const formattedText = escapeHtml(text)
+          .replace(/\*\*(.+?)\*\*/g, '<strong class="font-extrabold text-gold-antique dark:text-gold-light">$1</strong>')
+          .replace(/\n/g, '<br>');
+
+        if (isUser) {
+          wrapper.innerHTML = `
+            <div class="max-w-[82%] px-4 py-2.5 rounded-2xl rounded-tr-sm bg-gold text-matte text-xs sm:text-sm font-semibold shadow-md leading-relaxed">
+              ${formattedText}
+            </div>
+          `;
+        } else {
+          wrapper.innerHTML = `
+            <div class="max-w-[86%] px-4 py-3 rounded-2xl rounded-tl-sm bg-white dark:bg-obsidian border border-gold-antique/35 dark:border-gold/30 text-ink dark:text-neutral-100 text-xs sm:text-sm shadow-sm leading-relaxed">
+              ${formattedText}
+            </div>
+          `;
+        }
+
+        container.appendChild(wrapper);
+        container.scrollTop = container.scrollHeight;
+      }
+
+      function showAiTypingIndicator() {
+        const container = document.getElementById('aiMessagesContainer');
+        const el = document.createElement('div');
+        el.id = 'aiTypingBubble';
+        el.className = 'flex justify-end';
+        el.innerHTML = `
+          <div class="px-4 py-3 rounded-2xl rounded-tl-sm bg-white dark:bg-obsidian border border-gold-antique/30 dark:border-gold/25 flex items-center gap-1.5">
+            <span class="typing-dot"></span>
+            <span class="typing-dot"></span>
+            <span class="typing-dot"></span>
+          </div>
+        `;
+        container.appendChild(el);
+        container.scrollTop = container.scrollHeight;
+      }
+
+      function removeAiTypingIndicator() {
+        const el = document.getElementById('aiTypingBubble');
+        if (el) el.remove();
+      }
+
+      async function callGeminiEgyptianAssistant(userMessage) {
+        const coursesContext = state.subjects
+          .map((s) => `- [${s.code}] ${s.title} (${s.category}): ${s.description}`)
+          .join('\n');
+
+        const systemInstructionText = `أنت "مساعد عمر الذكي"، المساعد الدراسي الذكي لمنصة "Omar Summaries" الجامعية.
+قواعد شخصيتك وأسلوبك (مهم جداً):
+1. يجب أن ترد دائماً باللهجة المصرية الحلوة والودودة والواضحة (عامية مصرية طبيعية محترمة ومشجعة للطلاب، زي "يا بطل"، "يا هندسة"، "بص يا سيدي"، "سهلة خالص"). ممنوع الرد بالفصحى الجامدة أو بالإنجليزية فقط حتى لو الطالب سأل بالإنجليزي، اشرحله بالمصري مع ذكر المصطلحات الإنجليزية الأكاديمية بين قوسين لو المادة بالإنجليزي.
+2. جاوب على أي سؤال يسأله المستخدم مهما كان: سواء شرح درس أو نظرية من مواد المنصة، أو عمل أسئلة تدريبية واختبارات، أو تلخيص أفكار، أو نصائح للمذاكرة، أو أي سؤال عام في الحياة أو العلوم أو البرمجة أو الثقافة.
+3. نظم إجابتك في نقاط واضحة واستخدم **خط عريض** للمصطلحات المهمة عشان الطالب يفهم بسرعة.
+4. قائمة المواد المتاحة حالياً على منصة Omar Summaries:
+${coursesContext}`;
+
+        state.aiHistory.push({
+          role: 'user',
+          parts: [{ text: userMessage }]
+        });
+
+        const apiKey = '';
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+
+        const payload = {
+          contents: state.aiHistory.slice(-12),
+          systemInstruction: {
+            parts: [{ text: systemInstructionText }]
+          }
+        };
+
+        let delay = 1000;
+        for (let attempt = 0; attempt < 4; attempt++) {
+          try {
+            const response = await fetch(apiUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+              throw new Error(`HTTP ${response.status}`);
+            }
+
+            const result = await response.json();
+            const replyText = result?.candidates?.[0]?.content?.parts?.[0]?.text;
+            if (replyText) {
+              state.aiHistory.push({
+                role: 'model',
+                parts: [{ text: replyText }]
+              });
+              return replyText;
+            }
+            throw new Error('Empty response');
+          } catch (err) {
+            if (attempt === 3) {
+              return 'معلش يا بطل، حصلت مشكلة بسيطة في الاتصال بالسيرفر دلوقتي. جرب تبعت سؤالك تاني وهرد عليك فوراً!';
+            }
+            await new Promise((res) => setTimeout(res, delay));
+            delay *= 2;
+          }
+        }
+      }
+
+      async function handleSendAiMessage(text) {
+        const trimmed = text.trim();
+        if (!trimmed) return;
+
+        const inputEl = document.getElementById('aiChatInput');
+        const sendBtn = document.getElementById('aiSendBtn');
+
+        appendAiBubble('user', trimmed);
+        inputEl.value = '';
+        inputEl.disabled = true;
+        sendBtn.disabled = true;
+        showAiTypingIndicator();
+
+        const reply = await callGeminiEgyptianAssistant(trimmed);
+
+        removeAiTypingIndicator();
+        appendAiBubble('model', reply);
+        inputEl.disabled = false;
+        sendBtn.disabled = false;
+        inputEl.focus();
+      }
+
+      function openAiChatModal() {
+        const modal = document.getElementById('aiChatModal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        setTimeout(() => document.getElementById('aiChatInput').focus(), 100);
+      }
+
+      function closeAiChatModal() {
+        const modal = document.getElementById('aiChatModal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+
+      // ==================== ADMIN CONTENT STUDIO LOGIC ====================
+      function unlockAdminStudio(openModalAfter = true) {
+        state.isAdminUnlocked = true;
+        const lockIcon = document.getElementById('adminLockIcon');
+        if (lockIcon) lockIcon.setAttribute('data-lucide', 'unlock');
+        document.getElementById('adminActiveBanner').classList.remove('hidden');
+        if (window.lucide) window.lucide.createIcons();
+
+        renderSubjectsGrid();
+        renderAdminSubjectList();
+
+        if (openModalAfter) {
+          openAdminModal();
+        }
+      }
+
+      function lockAdminStudio() {
+        state.isAdminUnlocked = false;
+        const lockIcon = document.getElementById('adminLockIcon');
+        if (lockIcon) lockIcon.setAttribute('data-lucide', 'lock');
+        document.getElementById('adminActiveBanner').classList.add('hidden');
+        closeAdminModal();
+        if (window.lucide) window.lucide.createIcons();
+        renderSubjectsGrid();
+        showToast('Admin Studio locked.');
+      }
+
+      function openAdminModal() {
+        updateCategorySuggestions();
+        renderAdminSubjectList();
+        const modal = document.getElementById('adminStudioModal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+
+      function closeAdminModal() {
+        const modal = document.getElementById('adminStudioModal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+
+      async function replaceSubjectPdfFile(subjectId, docType, file) {
+        try {
+          const arrayBuffer = await file.arrayBuffer();
+          const doc = await window.pdfjsLib.getDocument({ data: arrayBuffer.slice(0) }).promise;
+          const numPages = doc.numPages;
+
+          await dbPutPdfBinary(subjectId, docType, arrayBuffer, file.name);
+
+          const sub = state.subjects.find((s) => s.id === subjectId);
+          if (sub) {
+            if (docType === 'explain') {
+              sub.explainSourceType = 'indexeddb';
+              sub.explainPdfUrl = '';
+              sub.explainPageCount = numPages;
+            } else {
+              sub.quizSourceType = 'indexeddb';
+              sub.quizPdfUrl = '';
+              sub.quizPageCount = numPages;
+            }
+            sub.updatedAt = new Date().toISOString().split('T')[0];
+            await dbPutSubject(sub);
+          }
+
+          renderSubjectsGrid();
+          renderAdminSubjectList();
+          const label = docType === 'explain' ? 'Explanation PDF' : 'Questions PDF';
+          showToast(`Updated ${label} for ${sub ? sub.code : subjectId} (${numPages} pages).`);
+        } catch (err) {
+          console.error(err);
+          showToast('Invalid PDF file. Please select a valid .pdf document.', 'error');
+        }
+      }
+
+      async function moveSubjectOrder(index, direction) {
+        const targetIdx = index + direction;
+        if (targetIdx < 0 || targetIdx >= state.subjects.length) return;
+
+        const temp = state.subjects[index];
+        state.subjects[index] = state.subjects[targetIdx];
+        state.subjects[targetIdx] = temp;
+
+        for (let i = 0; i < state.subjects.length; i++) {
+          state.subjects[i].order = i + 1;
+          await dbPutSubject(state.subjects[i]);
+        }
+
+        renderSubjectsGrid();
+        renderAdminSubjectList();
+      }
+
+      async function removeSubject(id) {
+        await dbDeleteSubject(id);
+        state.subjects = state.subjects.filter((s) => s.id !== id);
+        updateCategorySuggestions();
+        renderCategoryPills();
+        renderSubjectsGrid();
+        renderAdminSubjectList();
+        showToast('Subject folder removed.');
+      }
+
+      function openEditDetailsModal(subjectId) {
+        const sub = state.subjects.find((s) => s.id === subjectId);
+        if (!sub) return;
+
+        document.getElementById('editSubjectId').value = sub.id;
+        document.getElementById('editCourseCode').value = sub.code;
+        document.getElementById('editCategory').value = sub.category;
+        document.getElementById('editSubjectTitle').value = sub.title;
+        document.getElementById('editDescription').value = sub.description;
+
+        const modal = document.getElementById('editDetailsModal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+
+      function closeEditDetailsModal() {
+        const modal = document.getElementById('editDetailsModal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+
+      function renderAdminSubjectList() {
+        const list = document.getElementById('adminSubjectList');
+        if (!list) return;
+
+        if (state.subjects.length === 0) {
+          list.innerHTML = `<p class="text-xs text-zinc-500 dark:text-neutral-500 text-center py-4">No subjects available. Add one above or restore defaults.</p>`;
+          return;
+        }
+
+        list.innerHTML = state.subjects
+          .map(
+            (sub, idx) => `
+            <div class="p-3.5 rounded-xl bg-white dark:bg-matte border border-zinc-200 dark:border-neutral-800 hover:border-gold/40 flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+              <div class="min-w-0">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="text-xs font-bold text-gold-antique dark:text-gold bg-gold/15 px-2 py-0.5 rounded">${escapeHtml(sub.code)}</span>
+                  <span class="text-xs font-semibold text-zinc-600 dark:text-neutral-300 bg-zinc-100 dark:bg-obsidian px-2 py-0.5 rounded">${escapeHtml(sub.category)}</span>
+                </div>
+                <h5 class="text-sm font-bold text-ink dark:text-white truncate mt-1">${escapeHtml(sub.title)}</h5>
+              </div>
+
+              <div class="flex items-center gap-1.5 shrink-0 flex-wrap">
+                <!-- Edit Details & Category -->
+                <button
+                  type="button"
+                  data-edit-id="${sub.id}"
+                  class="px-2.5 py-1.5 rounded-lg bg-zinc-100 dark:bg-charcoal hover:bg-zinc-200 dark:hover:bg-neutral-800 border border-zinc-300 dark:border-neutral-700 text-ink dark:text-neutral-200 text-xs font-semibold flex items-center gap-1 cursor-pointer admin-edit-btn"
+                >
+                  <i data-lucide="edit-3" class="w-3.5 h-3.5 text-gold-antique dark:text-gold"></i>
+                  <span>Edit</span>
+                </button>
+
+                <!-- Replace Explanation PDF -->
+                <label class="px-2.5 py-1.5 rounded-lg bg-gold/15 hover:bg-gold/25 border border-gold-antique/40 dark:border-gold/40 text-gold-antique dark:text-gold-light text-xs font-semibold flex items-center gap-1 cursor-pointer transition-colors">
+                  <i data-lucide="book-open" class="w-3.5 h-3.5 text-gold-antique dark:text-gold"></i>
+                  <span>Explain PDF</span>
+                  <input type="file" accept="application/pdf" data-admin-replace="${sub.id}" data-doc-type="explain" class="hidden admin-replace-input" />
+                </label>
+
+                <!-- Replace Quiz PDF -->
+                <label class="px-2.5 py-1.5 rounded-lg bg-gold/15 hover:bg-gold/25 border border-gold-antique/40 dark:border-gold/40 text-gold-antique dark:text-gold-light text-xs font-semibold flex items-center gap-1 cursor-pointer transition-colors">
+                  <i data-lucide="help-circle" class="w-3.5 h-3.5 text-gold-antique dark:text-gold"></i>
+                  <span>Quiz PDF</span>
+                  <input type="file" accept="application/pdf" data-admin-replace="${sub.id}" data-doc-type="quiz" class="hidden admin-replace-input" />
+                </label>
+
+                <!-- Reorder Up / Down -->
+                <button
+                  type="button"
+                  data-move-idx="${idx}"
+                  data-dir="-1"
+                  ${idx === 0 ? 'disabled' : ''}
+                  class="p-1.5 rounded-lg bg-zinc-100 dark:bg-charcoal border border-zinc-300 dark:border-neutral-700 text-zinc-600 dark:text-neutral-300 hover:text-gold disabled:opacity-30 cursor-pointer admin-move-btn"
+                  title="Move Up"
+                >
+                  <i data-lucide="arrow-up" class="w-3.5 h-3.5"></i>
+                </button>
+                <button
+                  type="button"
+                  data-move-idx="${idx}"
+                  data-dir="1"
+                  ${idx === state.subjects.length - 1 ? 'disabled' : ''}
+                  class="p-1.5 rounded-lg bg-zinc-100 dark:bg-charcoal border border-zinc-300 dark:border-neutral-700 text-zinc-600 dark:text-neutral-300 hover:text-gold disabled:opacity-30 cursor-pointer admin-move-btn"
+                  title="Move Down"
+                >
+                  <i data-lucide="arrow-down" class="w-3.5 h-3.5"></i>
+                </button>
+
+                <!-- Delete -->
+                <button
+                  type="button"
+                  data-admin-del="${sub.id}"
+                  class="p-1.5 rounded-lg bg-zinc-100 dark:bg-charcoal border border-zinc-300 dark:border-neutral-700 text-zinc-500 dark:text-neutral-400 hover:text-red-500 hover:border-red-500/40 cursor-pointer admin-del-btn"
+                  title="Delete Subject"
+                >
+                  <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                </button>
+              </div>
+            </div>
+          `
+          )
+          .join('');
+
+        if (window.lucide) window.lucide.createIcons({ root: list });
+
+        list.querySelectorAll('.admin-edit-btn').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            openEditDetailsModal(btn.getAttribute('data-edit-id'));
+          });
+        });
+
+        list.querySelectorAll('.admin-replace-input').forEach((inp) => {
+          inp.addEventListener('change', async (e) => {
+            const f = e.target.files && e.target.files[0];
+            if (!f) return;
+            await replaceSubjectPdfFile(
+              inp.getAttribute('data-admin-replace'),
+              inp.getAttribute('data-doc-type'),
+              f
+            );
+          });
+        });
+
+        list.querySelectorAll('.admin-move-btn').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            moveSubjectOrder(
+              parseInt(btn.getAttribute('data-move-idx'), 10),
+              parseInt(btn.getAttribute('data-dir'), 10)
+            );
+          });
+        });
+
+        list.querySelectorAll('.admin-del-btn').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            removeSubject(btn.getAttribute('data-admin-del'));
+          });
+        });
+      }
+
+      function escapeHtml(str) {
+        return String(str || '')
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      }
+
+      // ==================== EVENT LISTENERS ====================
+      // Theme Switcher
+      document.getElementById('themeToggleBtn').addEventListener('click', () => {
+        applyTheme(state.theme === 'dark' ? 'light' : 'dark');
+      });
+
+      // Language Toggle
+      document.getElementById('langToggleBtn').addEventListener('click', () => {
+        applyLanguage(state.lang === 'en' ? 'ar' : 'en');
+      });
+
+      // AI Chat Controls
+      document.getElementById('floatingAiBtn').addEventListener('click', openAiChatModal);
+      document.getElementById('headerAiBtn').addEventListener('click', openAiChatModal);
+      document.getElementById('closeAiChatBtn').addEventListener('click', closeAiChatModal);
+      document.getElementById('clearAiChatBtn').addEventListener('click', () => {
+        initAiChatWelcome();
+        showToast('تم مسح المحادثة بنجاح.');
+      });
+
+      document.getElementById('aiChatForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const input = document.getElementById('aiChatInput');
+        handleSendAiMessage(input.value);
+      });
+
+      document.querySelectorAll('.ai-chip').forEach((chip) => {
+        chip.addEventListener('click', () => {
+          handleSendAiMessage(chip.getAttribute('data-ai-prompt'));
+        });
+      });
+
+      // Search Input & Clear
+      const searchInput = document.getElementById('searchInput');
+      const clearSearchBtn = document.getElementById('clearSearchBtn');
+      searchInput.addEventListener('input', (e) => {
+        state.searchQuery = e.target.value;
+        clearSearchBtn.classList.toggle('hidden', !state.searchQuery);
+        renderSubjectsGrid();
+      });
+
+      clearSearchBtn.addEventListener('click', () => {
+        state.searchQuery = '';
+        searchInput.value = '';
+        clearSearchBtn.classList.add('hidden');
+        renderSubjectsGrid();
+      });
+
+      document.getElementById('resetFiltersBtn').addEventListener('click', () => {
+        state.searchQuery = '';
+        state.activeCategory = 'All';
+        searchInput.value = '';
+        clearSearchBtn.classList.add('hidden');
+        renderCategoryPills();
+        renderSubjectsGrid();
+      });
+
+      // PDF Viewer Toolbar Controls
+      document.getElementById('closePdfViewerBtn').addEventListener('click', closePdfViewer);
+
+      document.getElementById('viewerSwitchExplainBtn').addEventListener('click', () => {
+        if (state.viewer.subject && state.viewer.docType !== 'explain') {
+          openPdfViewer(state.viewer.subject.id, 'explain');
+        }
+      });
+
+      document.getElementById('viewerSwitchQuizBtn').addEventListener('click', () => {
+        if (state.viewer.subject && state.viewer.docType !== 'quiz') {
+          openPdfViewer(state.viewer.subject.id, 'quiz');
+        }
+      });
+
+      document.getElementById('prevPageBtn').addEventListener('click', () => {
+        scrollToPdfPage(state.viewer.currentPage - 1);
+      });
+
+      document.getElementById('nextPageBtn').addEventListener('click', () => {
+        scrollToPdfPage(state.viewer.currentPage + 1);
+      });
+
+      document.getElementById('pageNumberInput').addEventListener('change', (e) => {
+        scrollToPdfPage(parseInt(e.target.value, 10) || 1);
+      });
+
+      document.getElementById('zoomInBtn').addEventListener('click', async () => {
+        if (state.viewer.scale < 2.2) {
+          state.viewer.scale = Math.round((state.viewer.scale + 0.2) * 10) / 10;
+          await renderAllPdfPages();
+        }
+      });
+
+      document.getElementById('zoomOutBtn').addEventListener('click', async () => {
+        if (state.viewer.scale > 0.6) {
+          state.viewer.scale = Math.round((state.viewer.scale - 0.2) * 10) / 10;
+          await renderAllPdfPages();
+        }
+      });
+
+      document.getElementById('zoomResetBtn').addEventListener('click', async () => {
+        state.viewer.scale = 1.0;
+        await renderAllPdfPages();
+      });
+
+      document.getElementById('toggleRenderModeBtn').addEventListener('click', () => {
+        const pagesWrapper = document.getElementById('pdfPagesWrapper');
+        const nativeFrame = document.getElementById('nativePdfFrame');
+        const label = document.getElementById('renderModeLabel');
+
+        if (state.viewer.renderMode === 'canvas') {
+          state.viewer.renderMode = 'native';
+          pagesWrapper.classList.add('hidden');
+          nativeFrame.classList.remove('hidden');
+          label.textContent = 'Native Frame';
+        } else {
+          state.viewer.renderMode = 'canvas';
+          nativeFrame.classList.add('hidden');
+          pagesWrapper.classList.remove('hidden');
+          label.textContent = 'HD Canvas';
+        }
+      });
+
+      document.getElementById('toggleFullscreenBtn').addEventListener('click', () => {
+        const viewer = document.getElementById('pdfViewerModal');
+        if (!document.fullscreenElement) {
+          viewer.requestFullscreen().catch(() => {});
+        } else {
+          document.exitFullscreen().catch(() => {});
+        }
+      });
+
+      document.getElementById('downloadPdfBtn').addEventListener('click', async () => {
+        const sub = state.viewer.subject;
+        const docType = state.viewer.docType;
+        if (!sub) return;
+
+        if (docType === 'explain' && sub.explainSourceType === 'url' && sub.explainPdfUrl) {
+          window.open(sub.explainPdfUrl, '_blank', 'noopener');
+          return;
+        }
+        if (docType === 'quiz' && sub.quizSourceType === 'url' && sub.quizPdfUrl) {
+          window.open(sub.quizPdfUrl, '_blank', 'noopener');
+          return;
+        }
+
+        const record = await dbGetPdfBinary(sub.id, docType);
+        if (!record || !record.data) {
+          showToast('PDF file unavailable for download.', 'error');
+          return;
+        }
+        const blob = new Blob([record.data], { type: 'application/pdf' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        const suffix = docType === 'explain' ? 'Explanation' : 'Practice_Quiz';
+        a.download = `${sub.code}-${sub.title.replace(/[^a-zA-Z0-9\u0600-\u06FF]+/g, '_')}-${suffix}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+        showToast('Downloading PDF...');
+      });
+
+      // Keyboard Escape to close modals
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          if (state.viewer.isOpen) closePdfViewer();
+          closeAiChatModal();
+          closeEditDetailsModal();
+          document.getElementById('pinModal').classList.add('hidden');
+          document.getElementById('pinModal').classList.remove('flex');
+          closeAdminModal();
+        }
+      });
+
+      // Admin Button & PIN Modal
+      document.getElementById('manageContentBtn').addEventListener('click', () => {
+        if (state.isAdminUnlocked) {
+          openAdminModal();
+        } else {
+          const pinModal = document.getElementById('pinModal');
+          document.getElementById('pinInput').value = '';
+          document.getElementById('pinErrorMsg').classList.add('hidden');
+          pinModal.classList.remove('hidden');
+          pinModal.classList.add('flex');
+          setTimeout(() => document.getElementById('pinInput').focus(), 100);
+        }
+      });
+
+      document.getElementById('closePinModalBtn').addEventListener('click', () => {
+        const pinModal = document.getElementById('pinModal');
+        pinModal.classList.add('hidden');
+        pinModal.classList.remove('flex');
+      });
+
+      document.getElementById('pinForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const entered = document.getElementById('pinInput').value.trim();
+        if (entered === state.adminPin) {
+          const pinModal = document.getElementById('pinModal');
+          pinModal.classList.add('hidden');
+          pinModal.classList.remove('flex');
+          unlockAdminStudio(true);
+          showToast('Welcome to Omar Summaries Content Studio.');
+        } else {
+          document.getElementById('pinErrorMsg').classList.remove('hidden');
+        }
+      });
+
+      document.getElementById('openAddSubjectBtn').addEventListener('click', openAdminModal);
+      document.getElementById('openAdminDrawerBtn').addEventListener('click', openAdminModal);
+      document.getElementById('closeAdminStudioBtn').addEventListener('click', closeAdminModal);
+      document.getElementById('lockAdminBtn').addEventListener('click', lockAdminStudio);
+
+      // Edit Details Modal Listeners
+      document.getElementById('closeEditModalBtn').addEventListener('click', closeEditDetailsModal);
+      document.getElementById('cancelEditBtn').addEventListener('click', closeEditDetailsModal);
+      document.getElementById('editSubjectForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('editSubjectId').value;
+        const sub = state.subjects.find((s) => s.id === id);
+        if (!sub) return;
+
+        sub.code = document.getElementById('editCourseCode').value.trim().toUpperCase();
+        sub.category = document.getElementById('editCategory').value.trim();
+        sub.title = document.getElementById('editSubjectTitle').value.trim();
+        sub.description = document.getElementById('editDescription').value.trim();
+        sub.updatedAt = new Date().toISOString().split('T')[0];
+
+        await dbPutSubject(sub);
+        updateCategorySuggestions();
+        renderCategoryPills();
+        renderSubjectsGrid();
+        renderAdminSubjectList();
+        closeEditDetailsModal();
+        showToast(`Updated "${sub.code} — ${sub.title}".`);
+      });
+
+      // Add New Subject Form Submission (Free-text Category + Dual PDFs)
+      document.getElementById('addSubjectForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const code = document.getElementById('newCourseCode').value.trim().toUpperCase();
+        const category = document.getElementById('newCategory').value.trim();
+        const title = document.getElementById('newSubjectTitle').value.trim();
+        const description = document.getElementById('newDescription').value.trim();
+
+        const expFile = document.getElementById('newExplainPdfFile').files?.[0];
+        const expUrl = document.getElementById('newExplainPdfUrl').value.trim();
+        const quizFile = document.getElementById('newQuizPdfFile').files?.[0];
+        const quizUrl = document.getElementById('newQuizPdfUrl').value.trim();
+
+        if (!expFile && !expUrl) {
+          showToast('Please upload an Explanation PDF or paste its direct URL.', 'error');
+          return;
+        }
+
+        const id = `sub-${Date.now()}`;
+        const today = new Date().toISOString().split('T')[0];
+
+        try {
+          const newSub = {
+            id,
+            code,
+            category,
+            title,
+            description,
+            updatedAt: today,
+            order: state.subjects.length + 1,
+            explainSourceType: expFile ? 'indexeddb' : 'url',
+            explainPdfUrl: expUrl || '',
+            quizSourceType: quizFile ? 'indexeddb' : quizUrl ? 'url' : 'indexeddb',
+            quizPdfUrl: quizUrl || ''
+          };
+
+          if (expFile) {
+            const expBuf = await expFile.arrayBuffer();
+            const doc = await window.pdfjsLib.getDocument({ data: expBuf.slice(0) }).promise;
+            newSub.explainPageCount = doc.numPages;
+            await dbPutPdfBinary(id, 'explain', expBuf, expFile.name);
+          }
+
+          if (quizFile) {
+            const quizBuf = await quizFile.arrayBuffer();
+            const qDoc = await window.pdfjsLib.getDocument({ data: quizBuf.slice(0) }).promise;
+            newSub.quizPageCount = qDoc.numPages;
+            await dbPutPdfBinary(id, 'quiz', quizBuf, quizFile.name);
+          } else if (!quizUrl) {
+            // Auto-generate a clean starter practice sheet if none provided
+            const autoQuiz = synthesizeQuizPdfBuffer(newSub);
+            await dbPutPdfBinary(id, 'quiz', autoQuiz, `${code}-Quiz.pdf`);
+          }
+
+          await dbPutSubject(newSub);
+          state.subjects.push(newSub);
+
+          e.target.reset();
+          updateCategorySuggestions();
+          renderCategoryPills();
+          renderSubjectsGrid();
+          renderAdminSubjectList();
+          showToast(`Added "${code} — ${title}" under "${category}".`);
+        } catch (err) {
+          console.error(err);
+          showToast('Failed to process PDF. Ensure the file is a valid PDF.', 'error');
+        }
+      });
+
+      // Restore Default 6 Courses
+      document.getElementById('resetDefaultsBtn').addEventListener('click', async () => {
+        await dbClearAll();
+        state.subjects = [];
+        await initializeVault();
+        showToast('Default 6 university courses restored.');
+      });
+
+      // Change Security PIN
+      document.getElementById('changePinForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const val = document.getElementById('newPinValue').value.trim();
+        if (val.length < 4) {
+          showToast('PIN must be at least 4 characters.', 'error');
+          return;
+        }
+        state.adminPin = val;
+        localStorage.setItem('omar_admin_pin', val);
+        document.getElementById('newPinValue').value = '';
+        showToast('Admin security PIN updated successfully.');
+      });
+
+      // Boot on Window Load
+      window.addEventListener('load', () => {
+        if (window.lucide) window.lucide.createIcons();
+        initializeVault();
+      });
+    })();
+  </script>
+</body>
+</html>
